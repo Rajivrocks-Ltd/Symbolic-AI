@@ -14,7 +14,7 @@ public class Main {
 		// System.out.println(x);
 
 		// Test copying objects.
-		State y = new State(x);
+		State y = x.copy(x);
 		y.food++;
 		System.out.println("State x: \n" + x + x.food + " " + x.hashCode() + "\n");
 		System.out.println("State y: \n" + y + y.food + " " + y.hashCode() + "\n");

@@ -20,11 +20,6 @@ public class State {
         this.food = food;
     }
 
-    // A new constructor that will take in a State object that you want to copy and create a brand new object.
-    public State(State state) {
-        this.copy(state);
-    }
-
     public void read(String file) throws IOException {
         File f = new File(file);
         Scanner reader = new Scanner(f);
@@ -63,16 +58,11 @@ public class State {
     }
 
     /*
-        Create a copy method that will be used for a new copy constructor that will use this method to assign the fields
-        from the object you want to copy (state.x) to your new object (this.x), fairly Straight forward.
+        Return a new State object that has copied all fields of the State input. (Could make this static for a more
+        elegant solution BUT the assignment doesn't allow this :( )
     */
-    public void copy(State state) {
-        this.board = state.board;
-        this.food = state.food;
-        this.agentX = state.agentX;
-        this.agentY = state.agentY;
-        this.score = state.score;
-        this.turn = state.turn;
+    public State copy(State state) {
+        return new State(state.board, state.agentX, state.agentY, state.score, state.turn, state.food);
     }
 
     public String toString() {
