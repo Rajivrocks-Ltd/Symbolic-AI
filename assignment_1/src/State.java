@@ -67,9 +67,68 @@ public class State {
 	public boolean isLeaf() {
 		return true;
 	}
-
+    /*
+        Check the values of the current position of the given agent and the values of the positions around the agent and returns the possible legal moves.
+    */
 	public Vector<String> legalMoves(int agent) {
-		return new Vector<>();
+        Vector<String> possible_moves = new Vector<String>();
+        if(agent == 0){
+            for (int i = 0; i < board.length; i++){
+                for (int j = 0; j < board[i].length; j++){
+                    if(board[i][j] == 'A'){
+                        if(board[i][j] == 'A'){
+                            possible_moves.add("block");
+                        }
+                        if(board[i][j] == '*'){
+                            possible_moves.add("eat");
+                        }
+                        if(board[i+1][j] != '#'){
+                            possible_moves.add("down");
+                            System.out.println(board[i+1][j]);
+                        }
+                        if(board[i-1][j] != '#'){
+                            possible_moves.add("up");
+                        }
+                        if(board[i][j+1] != '#'){
+                            possible_moves.add("right");
+                        }
+                        if(board[i][j-1] != '#'){
+                            possible_moves.add("left");
+                        }
+                    }
+                }
+            }
+			   
+        }
+        if(agent == 1){
+            for (int i = 0; i < board.length; i++){
+                for (int j = 0; j < board[i].length; j++){
+                    if(board[i][j] == 'B'){
+                        if(board[i][j] == 'B'){
+                            possible_moves.add("block");
+                        }
+                        if(board[i][j] == '*'){
+                            possible_moves.add("eat");
+                        }
+                        if(board[i+1][j] != '#'){
+                            possible_moves.add("down");
+                            System.out.println(board[i+1][j]);
+                        }
+                        if(board[i-1][j] != '#'){
+                            possible_moves.add("up");
+                        }
+                        if(board[i][j+1] != '#'){
+                            possible_moves.add("right");
+                        }
+                        if(board[i][j-1] != '#'){
+                            possible_moves.add("left");
+                        }
+                    }
+                }
+            }
+			   
+        }
+		return possible_moves;
 	}
 
 	public void execute(String action) {

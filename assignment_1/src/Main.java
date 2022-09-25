@@ -9,10 +9,10 @@ public class Main {
 		int Turn = 0;
 		int Food = 0;
 		State s = new State(Board, AgentX, AgentY, Score, Turn, Food);
-		s.read("data\\board.txt");
+		s.read("assignment_1\\data\\board.txt");
 		System.out.println(s);
 		System.out.println("Hello World");
-
+		System.out.println(s.legalMoves(s.turn));
 		//Game g=new Game();
 		//g.test();
 	}
