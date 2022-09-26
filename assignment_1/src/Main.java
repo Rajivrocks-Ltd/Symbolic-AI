@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.rmi.dgc.VMID;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
@@ -8,10 +9,15 @@ public class Main {
 		int[] Score = new int[0];
 		int Turn = 0;
 		int Food = 0;
-		State s = new State(Board, AgentX, AgentY, Score, Turn, Food);
-		s.read("data\\board.txt");
-		System.out.println(s);
-		System.out.println("Hello World");
+		State x = new State(Board, AgentX, AgentY, Score, Turn, Food);
+		x.read("data\\board.txt");
+		// System.out.println(x);
+
+		// Test copying objects.
+		State y = x.copy(x);
+		y.food++;
+		System.out.println("State x: \n" + x + x.food + " " + x.hashCode() + "\n");
+		System.out.println("State y: \n" + y + y.food + " " + y.hashCode() + "\n");
 
 		//Game g=new Game();
 		//g.test();
