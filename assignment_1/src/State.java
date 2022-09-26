@@ -67,11 +67,18 @@ public class State {
 	public boolean isLeaf() {
 		return true;
 	}
+
+	public Vector<String> currentlegalMoves() {
+		Vector<String> possible_moves = new Vector<>();
+		possible_moves = legalMoves(this.turn);
+		return possible_moves;
+	}
+
     /*
         Check the values of the current position of the given agent and the values of the positions around the agent and returns the possible legal moves.
     */
 	public Vector<String> legalMoves(int agent) {
-        Vector<String> possible_moves = new Vector<String>();
+        Vector<String> possible_moves = new Vector<>();
         if(agent == 0){
             for (int i = 0; i < board.length; i++){
                 for (int j = 0; j < board[i].length; j++){
