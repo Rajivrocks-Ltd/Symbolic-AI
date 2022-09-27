@@ -5,11 +5,12 @@ import java.util.Scanner;
 import java.util.Vector;
 
 public class State {
-    char[][] board;
-    int[] agentX, agentY;
-    int[] score;
-    int turn;
-    int food;
+	char [][] board;
+	int[] agentX, agentY;
+	int[] score;
+	int turn;
+	int food;
+	Vector<String> moves;
 
     public State(char[][] board, int[] agentX, int[] agentY, int[] score, int turn, int food) {
         this.board = board;
@@ -57,6 +58,114 @@ public class State {
         }
     }
 
+	/*
+		returns true if game ending conditions are met
+		conditions are: if no food is left or if either player no legal moves left
+    */
+	public boolean isLeaf() {
+		if(this.food == 0){
+			return true;
+		}
+		if(legalMoves().isEmpty()){
+			return true;
+		}
+		return false;
+	}
+
+	public Vector<String> legalMoves() {
+		Vector<String> possible_moves = new Vector<>();
+		possible_moves = legalMoves(this.turn);
+		return possible_moves;
+	}
+
+    /*
+        Check the values of the current position of the given agent and the values of the positions around the agent and returns the possible legal moves.
+    */
+	public Vector<String> legalMoves(int agent) {
+        Vector<String> possible_moves = new Vector<>();
+		char current_agent = ' ';
+		if(agent == 0){
+			current_agent = 'A';
+		} 
+		else{
+			current_agent = 'B';
+		}
+            for (int i = 0; i < board.length; i++){
+                for (int j = 0; j < board[i].length; j++){
+                        if(board[i][j] == current_agent){
+                            possible_moves.add("block");
+                        }
+                        if(board[i][j] == '*'){
+                            possible_moves.add("eat");
+                        }
+                        if(board[i+1][j] != '#'){
+                            possible_moves.add("down");
+                            System.out.println(board[i+1][j]);
+                        }
+                        if(board[i-1][j] != '#'){
+                            possible_moves.add("up");
+                        }
+                        if(board[i][j+1] != '#'){
+                            possible_moves.add("right");
+                        }
+                        if(board[i][j-1] != '#'){
+                            possible_moves.add("left");
+                        }
+                    }
+                }
+		return possible_moves;
+	}
+
+	public void execute(String action) {
+		char agent = '.';
+		Vector<int[]> agents = new Vector<>();
+		agents.add(this.agentX);
+		agents.add(this.agentY);
+		if(this.turn == 0){
+			agent = 'A';
+		}
+		else{
+			agent = 'B';
+		}
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < board[i].length; j++){
+				if(action.equals("block")){
+					board[i][j] = '#';
+				}
+				if(action.equals("up")){
+					board[i-1][j] = agent;
+					agents.get(this.turn)[0] = i-1;
+					agents.get(this.turn)[1] = j;
+					board[i][j] = ' ';
+				}
+				if(action.equals("down")){
+					board[i+1][j] = agent;
+					agents.get(this.turn)[0] = i+1;
+					agents.get(this.turn)[1] = j;
+					board[i][j] = ' ';
+				}
+				if(action.equals("right")){
+					board[i][j+1] = agent;
+					agents.get(this.turn)[0] = i;
+					agents.get(this.turn)[1] = j+1;
+					board[i][j] = ' ';
+				}
+				if(action.equals("left")){
+					board[i][j-1] = agent;
+					agents.get(this.turn)[0] = i;
+					agents.get(this.turn)[1] = j-1;
+					board[i][j] = ' ';
+				}
+				if(action.equals("eat")){
+					board[i][j] = agent;
+					this.food -=1;
+					this.score[this.turn] +=1;
+				}
+			}
+		}
+		this.moves.add(agent + ":" + action);
+	}
+
     /*
         Return a new State object that has copied all fields of the State input. (Could make this static for a more
         elegant solution BUT the assignment doesn't allow this :( )
@@ -74,17 +183,4 @@ public class State {
         }
         return s.toString();
     }
-
-    public boolean isLeaf() {
-        return true;
-    }
-
-    public Vector<String> legalMoves(int agent) {
-        return new Vector<>();
-    }
-
-    public void execute(String action) {
-
-    }
-
 }
