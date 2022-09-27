@@ -32,7 +32,7 @@ public class State {
         board = new char[w][h];
         food = 0;
         turn = 0;
-        score = new int[0];
+//        score = new int[0];
 
         try {
             while (reader.hasNextLine()) {
@@ -66,14 +66,11 @@ public class State {
 		if(this.food == 0){
 			return true;
 		}
-		if(legalMoves().isEmpty()){
-			return true;
-		}
-		return false;
-	}
+        return legalMoves().isEmpty();
+    }
 
 	public Vector<String> legalMoves() {
-		Vector<String> possible_moves = new Vector<>();
+		Vector<String> possible_moves;
 		possible_moves = legalMoves(this.turn);
 		return possible_moves;
 	}
@@ -83,41 +80,42 @@ public class State {
     */
 	public Vector<String> legalMoves(int agent) {
         Vector<String> possible_moves = new Vector<>();
-		char current_agent = ' ';
+		char current_agent;
 		if(agent == 0){
 			current_agent = 'A';
-		} 
+		}
 		else{
 			current_agent = 'B';
 		}
-            for (int i = 0; i < board.length; i++){
-                for (int j = 0; j < board[i].length; j++){
-                        if(board[i][j] == current_agent){
-                            possible_moves.add("block");
-                        }
-                        if(board[i][j] == '*'){
-                            possible_moves.add("eat");
-                        }
-                        if(board[i+1][j] != '#'){
-                            possible_moves.add("down");
-                            System.out.println(board[i+1][j]);
-                        }
-                        if(board[i-1][j] != '#'){
-                            possible_moves.add("up");
-                        }
-                        if(board[i][j+1] != '#'){
-                            possible_moves.add("right");
-                        }
-                        if(board[i][j-1] != '#'){
-                            possible_moves.add("left");
-                        }
+        for (int i = 0; i < board.length; i++){
+            for (int j = 0; j < board[i].length; j++){
+                if(board[i][j] == current_agent){
+                    if(board[i][j] == current_agent){
+                        possible_moves.add("block");
+                    }
+                    if(board[i][j] == '*'){
+                        possible_moves.add("eat");
+                    }
+                    if(board[i+1][j] != '#'){
+                        possible_moves.add("down");
+                    }
+                    if(board[i-1][j] != '#'){
+                        possible_moves.add("up");
+                    }
+                    if(board[i][j+1] != '#'){
+                        possible_moves.add("right");
+                    }
+                    if(board[i][j-1] != '#'){
+                        possible_moves.add("left");
                     }
                 }
+            }
+        }
 		return possible_moves;
 	}
 
 	public void execute(String action) {
-		char agent = '.';
+		char agent;
 		Vector<int[]> agents = new Vector<>();
 		agents.add(this.agentX);
 		agents.add(this.agentY);
@@ -165,6 +163,32 @@ public class State {
 		}
 		this.moves.add(agent + ":" + action);
 	}
+
+    private int whoisOpponent(){
+        int opponent;
+        if(turn == 0) { opponent = 1; } else { opponent = 0; }
+        return opponent;
+    }
+
+    public double value(int agent){
+        if(food == 0) {
+            return winnerBasedOnScore();
+        }
+
+        int opponent = whoisOpponent();
+
+        if(legalMoves(agent).isEmpty()) { return -1; }
+        else if(legalMoves(opponent).isEmpty()) { return 1;}
+        else {return winnerBasedOnScore();}
+    }
+
+    private int winnerBasedOnScore(){
+        int opponent = whoisOpponent();
+
+        if(score[turn] > score[opponent]) {return 1;}
+        else if (score[opponent] > score[turn]) { return -1; }
+        else { return 0; }
+    }
 
     /*
         Return a new State object that has copied all fields of the State input. (Could make this static for a more
