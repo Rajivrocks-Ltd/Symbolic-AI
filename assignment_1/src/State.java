@@ -10,6 +10,7 @@ public class State {
 	int[] score;
 	int turn;
 	int food;
+	public Vector<String> moves;
 
 	public State(char [][] board, int[] agentX,int[] agentY,int[] score, int turn, int food ) {
 		this.board = board;
@@ -119,7 +120,6 @@ public class State {
                         }
                         if(board[i+1][j] != '#'){
                             possible_moves.add("down");
-                            System.out.println(board[i+1][j]);
                         }
                         if(board[i-1][j] != '#'){
                             possible_moves.add("up");
@@ -139,7 +139,42 @@ public class State {
 	}
 
 	public void execute(String action) {
+		char agent = '.';
+		if(this.turn == 0){
+			agent = 'A';
+		}
+		else{
+			agent = 'B';
+		}
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < board[i].length; j++){
+				if(action.equals("block")){
+					board[i][j] = '#';
+				}
+				if(action.equals("up")){
+					board[i-1][j] = agent;
+					board[i][j] = ' ';
+				}
+				if(action.equals("down")){
+					board[i+1][j] = agent;
+					board[i][j] = ' ';
+				}
+				if(action.equals("right")){
+					board[i][j+1] = agent;
+					board[i][j] = ' ';
+				}
+				if(action.equals("left")){
+					board[i][j-1] = agent;
+					board[i][j] = ' ';
+				}
+				if(action.equals("eat")){
+					board[i][j] = agent;
+					this.food -=1;
 
+				}
+			}
+		}
+		this.moves.add(action);
 	}
 
 }
