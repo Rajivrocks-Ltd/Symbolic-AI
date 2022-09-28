@@ -1,8 +1,6 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
 
 public class State {
 	char [][] board;
@@ -10,7 +8,7 @@ public class State {
 	int[] score;
 	int turn;
 	int food;
-	Vector<String> moves;
+	Vector<String> moves = new Vector<>();
 
     public State(char[][] board, int[] agentX, int[] agentY, int[] score, int turn, int food) {
         this.board = board;
@@ -21,24 +19,42 @@ public class State {
         this.food = food;
     }
 
+    public int[] getAgentX(){
+        return agentX;
+    }
+
+    public int[] getAgentY(){
+        return agentY;
+    }
+
+    public void setAgentX(int[] agentX){
+        this.agentX = agentX;
+    }
+
+    public void setAgentY(int[] agentY){
+        this.agentY = agentY;
+    }
+
     public void read(String file) throws IOException {
         File f = new File(file);
         Scanner reader = new Scanner(f);
         String[] hw = reader.nextLine().split(" ");
-        int h = Integer.parseInt(hw[0]);
-        int w = Integer.parseInt(hw[1]);
-        agentX = new int[2];
-        agentY = new int[2];
+        int w = Integer.parseInt(hw[0]);
+        int h = Integer.parseInt(hw[1]);
         board = new char[w][h];
-        food = 0;
-        turn = 0;
-//        score = new int[0];
+        score = new int[]{0,0};
+//        agentX = new int[2];
+//        agentY = new int[2];
+//        food = 0;
+//        turn = 0;
 
         try {
             while (reader.hasNextLine()) {
                 for (int i = 0; i < w; i++) {
                     char[] s = reader.nextLine().toCharArray();
-                    for (int j = 0; j < s.length; j++) {
+                    for (int j = 0; j < h; j++) {
+                        if(s[j] == 'A') { setAgentX(new int[]{i,j}); board[i][j] = ' ';}
+                        else if(s[j] == 'B') { setAgentY(new int[]{i, j}); board[i][j] = ' '; }
                         board[i][j] = s[j];
                     }
                 }
@@ -56,6 +72,10 @@ public class State {
                 }
             }
         }
+
+        System.out.println("Agent x Location: " + agentX[0] + " " + agentX[1]);
+        System.out.println("Agent y Location: " + agentY[0] + " " + agentY[1]);
+
     }
 
 	/*
@@ -66,12 +86,13 @@ public class State {
 		if(this.food == 0){
 			return true;
 		}
-        return legalMoves().isEmpty();
+        if(legalMoves(0).isEmpty()) { return true; }
+        else return legalMoves(1).isEmpty();
     }
 
-	public Vector<String> legalMoves() {
+	    public Vector<String> legalMoves() {
 		Vector<String> possible_moves;
-		possible_moves = legalMoves(this.turn);
+		possible_moves = legalMoves(turn);
 		return possible_moves;
 	}
 
@@ -80,32 +101,34 @@ public class State {
     */
 	public Vector<String> legalMoves(int agent) {
         Vector<String> possible_moves = new Vector<>();
-		char current_agent;
-		if(agent == 0){
-			current_agent = 'A';
+		int[] current_agent;
+        int[] loopPos;
+		if(agent == 0) {
+			current_agent = getAgentX();
 		}
-		else{
-			current_agent = 'B';
+		else {
+			current_agent = getAgentY();
 		}
         for (int i = 0; i < board.length; i++){
             for (int j = 0; j < board[i].length; j++){
-                if(board[i][j] == current_agent){
-                    if(board[i][j] == current_agent){
+                loopPos = new int[]{i,j};
+                if(Arrays.equals(loopPos, current_agent)){
+                    if(Arrays.equals(loopPos, current_agent) && board[i][j] != '#' && board[i][j] != '*'){
                         possible_moves.add("block");
                     }
-                    if(board[i][j] == '*'){
+                    if(board[i][j] == '*') {
                         possible_moves.add("eat");
                     }
-                    if(board[i+1][j] != '#'){
+                    if(board[i + 1][j] != '#') {
                         possible_moves.add("down");
                     }
-                    if(board[i-1][j] != '#'){
+                    if(i != 0 && board[i - 1][j] != '#') {
                         possible_moves.add("up");
                     }
-                    if(board[i][j+1] != '#'){
+                    if(board[i][j + 1] != '#') {
                         possible_moves.add("right");
                     }
-                    if(board[i][j-1] != '#'){
+                    if(j != 0 && board[i][j - 1] != '#') {
                         possible_moves.add("left");
                     }
                 }
@@ -115,54 +138,95 @@ public class State {
 	}
 
 	public void execute(String action) {
-		char agent;
-		Vector<int[]> agents = new Vector<>();
-		agents.add(this.agentX);
-		agents.add(this.agentY);
-		if(this.turn == 0){
-			agent = 'A';
+		int[] agent;
+        int[] loopPos;
+        char agentChar;
+
+		if(turn == 0) {
+			agent = getAgentX();
+            agentChar = 'A';
 		}
-		else{
-			agent = 'B';
+		else {
+			agent = getAgentY();
+            agentChar = 'B';
 		}
 		for(int i = 0; i < board.length; i++){
 			for(int j = 0; j < board[i].length; j++){
-				if(action.equals("block")){
-					board[i][j] = '#';
-				}
-				if(action.equals("up")){
-					board[i-1][j] = agent;
-					agents.get(this.turn)[0] = i-1;
-					agents.get(this.turn)[1] = j;
-					board[i][j] = ' ';
-				}
-				if(action.equals("down")){
-					board[i+1][j] = agent;
-					agents.get(this.turn)[0] = i+1;
-					agents.get(this.turn)[1] = j;
-					board[i][j] = ' ';
-				}
-				if(action.equals("right")){
-					board[i][j+1] = agent;
-					agents.get(this.turn)[0] = i;
-					agents.get(this.turn)[1] = j+1;
-					board[i][j] = ' ';
-				}
-				if(action.equals("left")){
-					board[i][j-1] = agent;
-					agents.get(this.turn)[0] = i;
-					agents.get(this.turn)[1] = j-1;
-					board[i][j] = ' ';
-				}
-				if(action.equals("eat")){
-					board[i][j] = agent;
-					this.food -=1;
-					this.score[this.turn] +=1;
-				}
+                loopPos = new int[]{i,j};
+				if(Arrays.equals(loopPos, agent)){
+                    if(action.equals("block")) {
+                        board[i][j] = '#';
+                        turn = whoisOpponent();
+                    }
+                    if(i != 0 && action.equals("up")) {
+                        setAgentXYpos(i - 1, j);
+                        checkNextMove(i - 1, j, i , j, agentChar);
+                        turn = whoisOpponent();
+                    }
+                    if(action.equals("down")) {
+                        setAgentXYpos(i + 1, j);
+                        checkNextMove(i + 1, j, i, j, agentChar);
+                        turn = whoisOpponent();
+                    }
+                    if(action.equals("right")) {
+                        setAgentXYpos(i, j + 1);
+                        checkNextMove(i, j + 1, i, j, agentChar);
+                        turn = whoisOpponent();
+                    }
+                    if(action.equals("left")) {
+                        setAgentXYpos(i, j - 1);
+                        checkNextMove(i, j - 1, i, j, agentChar);
+                        turn = whoisOpponent();
+                    }
+                    if(action.equals("eat")) {
+                        board[i][j] = agentChar;
+                        food--;
+                        score[turn]++;
+                        turn = whoisOpponent();
+                    }
+                }
 			}
 		}
-		this.moves.add(agent + ":" + action);
+		moves.add(agentChar + " : " + action + " ");
 	}
+
+    private void checkNextMove(int adjustedI, int adjustedJ, int i, int j, char agent) {
+        if (board[adjustedI][adjustedJ] == '*' && !prevMoveIsBlock()) {
+            board[i][j] = ' ';
+        } else if(board[i][j] == '*' && board[adjustedI][adjustedJ] == '*') {
+            board[i][j] = board[i][j];
+        } else if(board[adjustedI][adjustedJ] == '*' && prevMoveIsBlock()) {
+            board[i][j] = board[i][j];
+        } else if(board[adjustedI][adjustedJ] != '*' && !prevMoveIsBlock()) {
+            if(test(i, j)) {
+                board[adjustedI][adjustedJ] = agent;
+                board[i][j] = ' ';
+            }
+        } else if(board[i][j] == '*') {
+            board[adjustedI][adjustedJ] = agent;
+        }
+    }
+
+    private boolean test(int i, int j) {
+        return board[i][j] != '*';
+    }
+
+    private boolean prevMoveIsBlock() {
+        return Objects.equals(lastAgentAction(moves), "block");
+    }
+
+    private String lastAgentAction(Vector<String> moves) {
+        ArrayList<String> movesList = new ArrayList<>(moves);
+        if(movesList.size() < 2) { return " "; }
+        else {
+            String[] action = movesList.get(movesList.size() - 2).split(" ");
+            return action[2];
+        }
+    }
+
+    private void setAgentXYpos(int i, int j) {
+        if(turn == 0) {setAgentX(new int[]{i, j});} else { setAgentY(new int[]{i, j}); }
+    }
 
     private int whoisOpponent(){
         int opponent;

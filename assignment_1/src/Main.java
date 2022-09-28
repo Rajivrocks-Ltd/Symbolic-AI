@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.rmi.dgc.VMID;
+import java.util.Arrays;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
@@ -13,10 +14,46 @@ public class Main {
 
 		State s = new State(Board, AgentX, AgentY, Score, Turn, Food);
 		s.read("data\\board.txt");
-		System.out.println(s);
-		System.out.println(s.legalMoves(s.turn));
-		System.out.println(s.value(s.turn));
+//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//		System.out.println(s);
+//		s.execute("block"); // a
+//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//		System.out.println(s);
+//		s.execute("left"); // b
+//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//		System.out.println(s);
+//		s.execute("up"); // a
+//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//		System.out.println(s);
+//		s.execute("right"); // b
+//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//		System.out.println(s);
+//		s.execute("right"); // a
+//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//		System.out.println(s);
+//		s.execute("left"); // b
+//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//		System.out.println(s);
+//		s.execute("down"); // a
+//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//		System.out.println(s);
+//		s.execute("block"); // b
+//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//		System.out.println(s);
+//		s.execute("eat"); // a
+//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//		System.out.println(s);
+//		System.out.println(s.value(s.turn));
+//		System.out.println(s.turn + " " + Arrays.toString(s.score));
 
+	while(!s.isLeaf()) {
+		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+		String move = s.legalMoves().get((int)(Math.random()*s.legalMoves().size()));
+		System.out.println(move);
+		System.out.println(s);
+		s.execute(move);
+		System.out.println(s.turn + " " + Arrays.toString(s.score));
+	}
 
 //		Test copying objects.
 //		State x = new State(Board, AgentX, AgentY, Score, Turn, Food);
