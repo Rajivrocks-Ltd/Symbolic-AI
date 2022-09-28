@@ -198,17 +198,25 @@ public class State {
         } else if(board[adjustedI][adjustedJ] == '*' && prevMoveIsBlock()) {
             board[i][j] = board[i][j];
         } else if(board[adjustedI][adjustedJ] != '*' && !prevMoveIsBlock()) {
-            if(test(i, j)) {
+            if(!isCurrentSpotFood(i, j) && !isCurrentSpotBlock(i, j)) {
                 board[adjustedI][adjustedJ] = agent;
                 board[i][j] = ' ';
+            }  else if(prevMoveIsBlock() && board[adjustedI][adjustedJ] == ' ') {
+            board[adjustedI][adjustedJ] = agent;
+            } else if(board[i][j] == '*') {
+            board[adjustedI][adjustedJ] = agent;
             }
-        } else if(board[i][j] == '*') {
+        } else if(prevMoveIsBlock() && board[adjustedI][adjustedJ] == ' ') {
             board[adjustedI][adjustedJ] = agent;
         }
     }
 
-    private boolean test(int i, int j) {
-        return board[i][j] != '*';
+    private boolean isCurrentSpotFood(int i, int j) {
+        return board[i][j] == '*';
+    }
+
+    private  boolean isCurrentSpotBlock(int i, int j) {
+        return board[i][j] == '#';
     }
 
     private boolean prevMoveIsBlock() {
