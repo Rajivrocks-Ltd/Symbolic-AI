@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.rmi.dgc.VMID;
 import java.util.Arrays;
+import java.util.Vector;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
@@ -10,9 +11,10 @@ public class Main {
 //		int[] Score = new int[]{0,0};
 //		int Turn = 0;
 //		int Food = 0;
+//		Vector<String> moves = new Vector<>();
 //
 //
-//		State s = new State(Board, AgentX, AgentY, Score, Turn, Food);
+//		State s = new State(Board, AgentX, AgentY, Score, Turn, Food, moves);
 //		s.read("data\\board.txt");
 //		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
 //		System.out.println(s);
@@ -46,21 +48,21 @@ public class Main {
 //		System.out.println(s.value(s.turn));
 //		System.out.println(s.turn + " " + Arrays.toString(s.score));
 
-//	int count = 0;
-//	while(!s.isLeaf()) {
-//		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
-//		String move = s.legalMoves().get((int)(Math.random()*s.legalMoves().size()));
-//		System.out.println(move);
-//		System.out.println(s);
-//		s.execute(move);
-//		System.out.println("Score on turn of Player " + s.turn + " " + Arrays.toString(s.score));
-//		count++;
-//	}
-//	System.out.println("Total moves: " + count);
-//	System.out.println(s.value(s.turn));
+//		int count = 0;
+//		while(!s.isLeaf()) {
+//			System.out.println(s.legalMoves(s.turn) + " " + s.turn);
+//			String move = s.legalMoves().get((int)(Math.random()*s.legalMoves().size()));
+//			System.out.println(move);
+//			System.out.println(s);
+//			s.execute(move);
+//			System.out.println("Score on turn of Player " + s.turn + " " + Arrays.toString(s.score));
+//			count++;
+//		}
+//		System.out.println("Total moves: " + count);
+//		System.out.println(s.value(s.turn));
 
 //		Test copying objects.
-//		State x = new State(Board, AgentX, AgentY, Score, Turn, Food);
+//		State x = new State(Board, AgentX, AgentY, Score, Turn, Food, moves);
 //		State y = x.copy(x);
 //		y.food++;
 //		System.out.println("State x: \n" + x + x.food + " " + x.hashCode() + "\n");

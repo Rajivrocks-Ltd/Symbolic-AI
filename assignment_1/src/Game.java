@@ -1,6 +1,7 @@
 import com.sun.nio.sctp.SctpSocketOption;
 
 import java.io.IOException;
+import java.util.Vector;
 
 public class Game {
 	State b;
@@ -11,8 +12,9 @@ public class Game {
 		int[] Score = new int[]{0,0};
 		int Turn = 0;
 		int Food = 0;
+		Vector<String> moves = new Vector<>();
 
-		b = new State(Board, AgentX, AgentY, Score, Turn, Food);
+		b = new State(Board, AgentX, AgentY, Score, Turn, Food, moves);
 		b.read("data/board.txt");
 	}
 
@@ -23,26 +25,34 @@ public class Game {
 			return s;
 		}
 
-		if(forAgent == s.turn) {
+		if(forAgent == 0) {
 			double best = Double.NEGATIVE_INFINITY;
+			State bestState = s;
 			State copyState = s.copy(s);
-			for(String move: s.legalMoves(copyState.turn)) {
+			for(String move: copyState.legalMoves(copyState.turn)) {
 				copyState.execute(move);
-				State minimaxState = minimax(copyState, copyState.whoisOpponent(), maxDepth, depth + 1);
-				double minimaxValue = minimaxState.value(forAgent);
-				best = Math.max(best, minimaxValue);
+				State minimaxEvalState = minimax(copyState, s.whoisOpponent(), maxDepth, depth + 1);
+				double minimaxEvalValue = minimaxEvalState.value(forAgent);
+				if(minimaxEvalValue > best) {
+					best = Math.max(best, minimaxEvalValue);
+					bestState = minimaxEvalState;
+				}
 			}
-			return copyState;
+			return bestState;
 		} else {
 			double best = Double.POSITIVE_INFINITY;
+			State bestState = s;
 			State copyState = s.copy(s);
-			for(String move: s.legalMoves(copyState.turn)) {
+			for(String move: copyState.legalMoves(copyState.turn)) {
 				copyState.execute(move);
-				State minimaxState = minimax(copyState, copyState.whoisOpponent(), maxDepth, depth + 1);
-				double minimaxValue = minimaxState.value(forAgent);
-				best = Math.min(best, minimaxValue);
+				State minimaxEvalState = minimax(copyState, s.whoisOpponent(), maxDepth, depth + 1);
+				double minimaxEvalValue = minimaxEvalState.value(forAgent);
+				if(minimaxEvalValue < best) {
+					best = Math.min(best, minimaxEvalValue);
+					bestState = minimaxEvalState;
+				}
 			}
-			return copyState;
+			return bestState;
 		}
 	}
 

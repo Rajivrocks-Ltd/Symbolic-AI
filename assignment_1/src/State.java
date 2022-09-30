@@ -8,15 +8,16 @@ public class State {
 	int[] score;
 	int turn;
 	int food;
-	Vector<String> moves = new Vector<>();
+	Vector<String> moves;
 
-    public State(char[][] board, int[] agentX, int[] agentY, int[] score, int turn, int food) {
+    public State(char[][] board, int[] agentX, int[] agentY, int[] score, int turn, int food, Vector<String> moves) {
         this.board = board;
         this.agentX = agentX;
         this.agentY = agentY;
         this.score = score;
         this.turn = turn;
         this.food = food;
+        this.moves = moves;
     }
 
     public int[] getAgentX(){
@@ -125,7 +126,7 @@ public class State {
                     if(i != 0 && board[i - 1][j] != '#') {
                         possible_moves.add("up");
                     }
-                    if(board[i][j + 1] != '#') {
+                    if(j < board[i].length && board[i][j + 1] != '#') {
                         possible_moves.add("right");
                     }
                     if(j != 0 && board[i][j - 1] != '#') {
@@ -267,7 +268,7 @@ public class State {
         elegant solution BUT the assignment doesn't allow this :( )
     */
     public State copy(State state) {
-        return new State(state.board, state.agentX, state.agentY, state.score, state.turn, state.food);
+        return new State(state.board, state.agentX, state.agentY, state.score, state.turn, state.food, state.moves);
     }
 
     public String toString() {
