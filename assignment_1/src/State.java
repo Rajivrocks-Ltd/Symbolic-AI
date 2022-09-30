@@ -236,7 +236,7 @@ public class State {
         if(turn == 0) {setAgentX(new int[]{i, j});} else { setAgentY(new int[]{i, j}); }
     }
 
-    private int whoisOpponent(){
+    public int whoisOpponent(){
         int opponent;
         if(turn == 0) { opponent = 1; } else { opponent = 0; }
         return opponent;
