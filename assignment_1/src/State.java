@@ -8,16 +8,15 @@ public class State {
 	int[] score;
 	int turn;
 	int food;
-	Vector<String> moves;
+	Vector<String> moves = new Vector<>();
 
-    public State(char[][] board, int[] agentX, int[] agentY, int[] score, int turn, int food, Vector<String> moves) {
+    public State(char[][] board, int[] agentX, int[] agentY, int[] score, int turn, int food) {
         this.board = board;
         this.agentX = agentX;
         this.agentY = agentY;
         this.score = score;
         this.turn = turn;
         this.food = food;
-        this.moves = moves;
     }
 
     public int[] getAgentX(){
@@ -56,7 +55,7 @@ public class State {
                     for (int j = 0; j < h; j++) {
                         if(s[j] == 'A') { setAgentX(new int[]{i,j}); board[i][j] = ' ';}
                         else if(s[j] == 'B') { setAgentY(new int[]{i, j}); board[i][j] = ' '; }
-                        board[i][j] = s[j];
+                        else { board[i][j] = s[j]; }
                     }
                 }
             }
@@ -91,7 +90,7 @@ public class State {
         else return legalMoves(1).isEmpty();
     }
 
-	    public Vector<String> legalMoves() {
+    public Vector<String> legalMoves() {
 		Vector<String> possible_moves;
 		possible_moves = legalMoves(turn);
 		return possible_moves;
@@ -114,23 +113,23 @@ public class State {
             for (int j = 0; j < board[i].length; j++){
                 loopPos = new int[]{i,j};
                 if(Arrays.equals(loopPos, current_agent)){
-                    if(Arrays.equals(loopPos, current_agent) && board[i][j] != '#' && board[i][j] != '*'){
-                        possible_moves.add("block");
-                    }
-                    if(board[i][j] == '*') {
-                        possible_moves.add("eat");
-                    }
-                    if(board[i + 1][j] != '#') {
-                        possible_moves.add("down");
-                    }
                     if(i != 0 && board[i - 1][j] != '#') {
                         possible_moves.add("up");
                     }
                     if(j < board[i].length && board[i][j + 1] != '#') {
                         possible_moves.add("right");
                     }
+                    if(board[i + 1][j] != '#') {
+                        possible_moves.add("down");
+                    }
                     if(j != 0 && board[i][j - 1] != '#') {
                         possible_moves.add("left");
+                    }
+                    if(board[i][j] == '*') {
+                        possible_moves.add("eat");
+                    }
+                    if(Arrays.equals(loopPos, current_agent) && board[i][j] != '#' && board[i][j] != '*'){
+                        possible_moves.add("block");
                     }
                 }
             }
@@ -161,26 +160,22 @@ public class State {
                     }
                     if(i != 0 && action.equals("up")) {
                         setAgentXYpos(i - 1, j);
-                        checkNextMove(i - 1, j, i , j, agentChar);
                         turn = whoisOpponent();
                     }
                     if(action.equals("down")) {
                         setAgentXYpos(i + 1, j);
-                        checkNextMove(i + 1, j, i, j, agentChar);
                         turn = whoisOpponent();
                     }
                     if(action.equals("right")) {
                         setAgentXYpos(i, j + 1);
-                        checkNextMove(i, j + 1, i, j, agentChar);
                         turn = whoisOpponent();
                     }
                     if(action.equals("left")) {
                         setAgentXYpos(i, j - 1);
-                        checkNextMove(i, j - 1, i, j, agentChar);
                         turn = whoisOpponent();
                     }
                     if(action.equals("eat")) {
-                        board[i][j] = agentChar;
+                        board[i][j] = ' ';
                         food--;
                         score[turn]++;
                         turn = whoisOpponent();
@@ -190,48 +185,6 @@ public class State {
 		}
 		moves.add(agentChar + " : " + action + " ");
 	}
-
-    private void checkNextMove(int adjustedI, int adjustedJ, int i, int j, char agent) {
-        if (board[adjustedI][adjustedJ] == '*' && !prevMoveIsBlock()) {
-            board[i][j] = ' ';
-        } else if(board[i][j] == '*' && board[adjustedI][adjustedJ] == '*') {
-            board[i][j] = board[i][j];
-        } else if(board[adjustedI][adjustedJ] == '*' && prevMoveIsBlock()) {
-            board[i][j] = board[i][j];
-        } else if(board[adjustedI][adjustedJ] != '*' && !prevMoveIsBlock()) {
-            if(!isCurrentSpotFood(i, j) && !isCurrentSpotBlock(i, j)) {
-                board[adjustedI][adjustedJ] = agent;
-                board[i][j] = ' ';
-            }  else if(prevMoveIsBlock() && board[adjustedI][adjustedJ] == ' ') {
-            board[adjustedI][adjustedJ] = agent;
-            } else if(board[i][j] == '*') {
-            board[adjustedI][adjustedJ] = agent;
-            }
-        } else if(prevMoveIsBlock() && board[adjustedI][adjustedJ] == ' ') {
-            board[adjustedI][adjustedJ] = agent;
-        }
-    }
-
-    private boolean isCurrentSpotFood(int i, int j) {
-        return board[i][j] == '*';
-    }
-
-    private  boolean isCurrentSpotBlock(int i, int j) {
-        return board[i][j] == '#';
-    }
-
-    private boolean prevMoveIsBlock() {
-        return Objects.equals(lastAgentAction(moves), "block");
-    }
-
-    private String lastAgentAction(Vector<String> moves) {
-        ArrayList<String> movesList = new ArrayList<>(moves);
-        if(movesList.size() < 2) { return " "; }
-        else {
-            String[] action = movesList.get(movesList.size() - 2).split(" ");
-            return action[2];
-        }
-    }
 
     private void setAgentXYpos(int i, int j) {
         if(turn == 0) {setAgentX(new int[]{i, j});} else { setAgentY(new int[]{i, j}); }
@@ -243,20 +196,24 @@ public class State {
         return opponent;
     }
 
+    public int minimaxOpponent(int agent) {
+        if(agent == 0) { return 1; } else { return 0; }
+    }
+
     public double value(int agent){
         if(food == 0) {
-            return winnerBasedOnScore();
+            return winnerBasedOnScore(agent);
         }
 
-        int opponent = whoisOpponent();
+        int opponent = minimaxOpponent(agent);
 
         if(legalMoves(agent).isEmpty()) { return -1; }
         else if(legalMoves(opponent).isEmpty()) { return 1;}
-        else {return winnerBasedOnScore();}
+        else {return winnerBasedOnScore(agent);}
     }
 
-    private int winnerBasedOnScore(){
-        int opponent = whoisOpponent();
+    private int winnerBasedOnScore(int agent){
+        int opponent = minimaxOpponent(agent);
 
         if(score[turn] > score[opponent]) {return 1;}
         else if (score[opponent] > score[turn]) { return -1; }
@@ -267,8 +224,19 @@ public class State {
         Return a new State object that has copied all fields of the State input. (Could make this static for a more
         elegant solution BUT the assignment doesn't allow this :( )
     */
-    public State copy(State state) {
-        return new State(state.board, state.agentX, state.agentY, state.score, state.turn, state.food, state.moves);
+
+    public State copy() {
+        return new State(deepCopyBoard(), this.agentX, this.agentY, this.score, this.turn, this.food);
+    }
+
+    private char[][] deepCopyBoard() {
+        char[][] newBoard = new char[board[0].length][board.length];
+        for (int i = 0; i < board[0].length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                newBoard[i][j] = board[i][j];
+            }
+        }
+        return newBoard;
     }
 
     public String toString() {

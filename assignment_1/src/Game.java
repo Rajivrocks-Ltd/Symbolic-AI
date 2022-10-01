@@ -1,6 +1,7 @@
 import com.sun.nio.sctp.SctpSocketOption;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class Game {
@@ -12,9 +13,8 @@ public class Game {
 		int[] Score = new int[]{0,0};
 		int Turn = 0;
 		int Food = 0;
-		Vector<String> moves = new Vector<>();
 
-		b = new State(Board, AgentX, AgentY, Score, Turn, Food, moves);
+		b = new State(Board, AgentX, AgentY, Score, Turn, Food);
 		b.read("data/board.txt");
 	}
 
@@ -27,55 +27,55 @@ public class Game {
 
 		if(forAgent == 0) {
 			double best = Double.NEGATIVE_INFINITY;
-			State bestState = s;
-			State copyState = s.copy(s);
-			for(String move: copyState.legalMoves(copyState.turn)) {
+			State bestState = s.copy();
+			for(String move: s.legalMoves(0)) {
+				State copyState = s.copy();
 				copyState.execute(move);
-				State minimaxEvalState = minimax(copyState, s.whoisOpponent(), maxDepth, depth + 1);
+				State minimaxEvalState = minimax(copyState, 1, maxDepth, depth + 1);
 				double minimaxEvalValue = minimaxEvalState.value(forAgent);
 				if(minimaxEvalValue > best) {
-					best = Math.max(best, minimaxEvalValue);
+					best = minimaxEvalValue;
 					bestState = minimaxEvalState;
 				}
+				copyState.turn = 0;
 			}
 			return bestState;
 		} else {
 			double best = Double.POSITIVE_INFINITY;
 			State bestState = s;
-			State copyState = s.copy(s);
-			for(String move: copyState.legalMoves(copyState.turn)) {
+			for(String move: s.legalMoves(1)) {
+				State copyState = s.copy();
 				copyState.execute(move);
-				State minimaxEvalState = minimax(copyState, s.whoisOpponent(), maxDepth, depth + 1);
+				State minimaxEvalState = minimax(copyState, 0, maxDepth, depth + 1);
 				double minimaxEvalValue = minimaxEvalState.value(forAgent);
 				if(minimaxEvalValue < best) {
-					best = Math.min(best, minimaxEvalValue);
+					best = minimaxEvalValue;
 					bestState = minimaxEvalState;
 				}
+				copyState.turn = 1;
 			}
 			return bestState;
 		}
 	}
 
 	public void test() {
-		
-//		System.out.println(minimax(b, b.turn, 11, 0));
-		int count = 0;
 
-		System.out.println(b);
+		State test = minimax(b, b.turn, 11, 0);
+		System.out.println(test);
+		System.out.println(test.moves);
+		System.out.println(Arrays.toString(test.agentX) + " " + Arrays.toString(test.agentY));
 
-		while (!b.isLeaf()){
-			State endState = minimax(b, b.turn, 11, 0);
-			for (String moves: endState.moves){
-				System.out.println(b.legalMoves(b.turn) + " " + b.turn);
-				System.out.println("Current move is: " + moves);
-				b.execute(moves);
-				System.out.println(b);
-			}
+//		while (!b.isLeaf()){
 //			System.out.println(b.toString());
 //			System.out.println("Legal moves for agent with turn:"+b.legalMoves());
 //			b.execute(b.legalMoves().get((int)(Math.random()*b.legalMoves().size())));
-		}
-		System.out.println("Total moves: " + count);
-		System.out.println(b.value(b.turn));
+//		}
 	}
+
+	public static String whoWon(double score){
+		if(score == -1.0) { return "Lost"; }
+		else if(score == 1.0) { return "Win"; }
+		else { return "Tie"; }
+	}
+
 }

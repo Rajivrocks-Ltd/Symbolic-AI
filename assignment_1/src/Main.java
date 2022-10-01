@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.rmi.dgc.VMID;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -11,11 +10,11 @@ public class Main {
 //		int[] Score = new int[]{0,0};
 //		int Turn = 0;
 //		int Food = 0;
-//		Vector<String> moves = new Vector<>();
 //
 //
-//		State s = new State(Board, AgentX, AgentY, Score, Turn, Food, moves);
+//		State s = new State(Board, AgentX, AgentY, Score, Turn, Food);
 //		s.read("data\\board.txt");
+
 //		System.out.println(s.legalMoves(s.turn) + " " + s.turn);
 //		System.out.println(s);
 //		s.execute("block"); // a
@@ -58,8 +57,10 @@ public class Main {
 //			System.out.println("Score on turn of Player " + s.turn + " " + Arrays.toString(s.score));
 //			count++;
 //		}
+//		double score = s.value(s.turn);
+//		String outcome = whoWon(score);
 //		System.out.println("Total moves: " + count);
-//		System.out.println(s.value(s.turn));
+//		System.out.println(score + " " + s.turn + " " + outcome);
 
 //		Test copying objects.
 //		State x = new State(Board, AgentX, AgentY, Score, Turn, Food, moves);
@@ -72,4 +73,11 @@ public class Main {
 		Game g=new Game();
 		g.test();
 	}
+
+	public static String whoWon(double score){
+		if(score == -1.0) { return "Lost"; }
+		else if(score == 1.0) { return "Win"; }
+		else { return "Tie"; }
+	}
+
 }
