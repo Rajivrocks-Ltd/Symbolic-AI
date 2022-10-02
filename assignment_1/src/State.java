@@ -210,7 +210,7 @@ public class State {
 
         if(legalMoves(agent).isEmpty()) { return -1; }
         else if(legalMoves(opponent).isEmpty()) { return 1;}
-        else {return winnerBasedOnScore(agent);}
+        else {return 0;}
     }
 
     private int winnerBasedOnScore(int agent){
