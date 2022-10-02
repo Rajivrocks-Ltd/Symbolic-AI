@@ -8,15 +8,16 @@ public class State {
 	int[] score;
 	int turn;
 	int food;
-	Vector<String> moves = new Vector<>();
+	Vector<String> moves;
 
-    public State(char[][] board, int[] agentX, int[] agentY, int[] score, int turn, int food) {
+    public State(char[][] board, int[] agentX, int[] agentY, int[] score, int turn, int food, Vector<String> moves) {
         this.board = board;
         this.agentX = agentX;
         this.agentY = agentY;
         this.score = score;
         this.turn = turn;
         this.food = food;
+        this.moves = moves;
     }
 
     public int[] getAgentX(){
@@ -227,7 +228,7 @@ public class State {
 
     public State copy() {
         return new State(deepCopyBoard(), deepCopyIntArray(agentX), deepCopyIntArray(agentY), deepCopyIntArray(score),
-                this.turn, this.food);
+                this.turn, this.food, deepCopyVector());
     }
 
     private char[][] deepCopyBoard() {
@@ -241,8 +242,11 @@ public class State {
     }
 
     private int[] deepCopyIntArray(int[] array) {
-        int[] newArray = new int[]{array[0], array[1]};
-        return newArray;
+        return new int[]{array[0], array[1]};
+    }
+
+    private Vector<String> deepCopyVector() {
+        return new Vector<>(moves);
     }
 
     public String toString() {

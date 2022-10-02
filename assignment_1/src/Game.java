@@ -12,8 +12,9 @@ public class Game {
 		int[] Score = new int[]{0,0};
 		int Turn = 0;
 		int Food = 0;
+		Vector<String> moves = new Vector<>();
 
-		b = new State(Board, AgentX, AgentY, Score, Turn, Food);
+		b = new State(Board, AgentX, AgentY, Score, Turn, Food, moves);
 		b.read("data/board.txt");
 	}
 
@@ -35,6 +36,8 @@ public class Game {
 				if(minimaxEvalValue > best) {
 					best = minimaxEvalValue;
 					bestState = minimaxEvalState;
+				} else {
+					copyState.moves.remove(copyState.moves.size() - 1);
 				}
 				copyState.turn = 0;
 			}
@@ -50,6 +53,8 @@ public class Game {
 				if(minimaxEvalValue < best) {
 					best = minimaxEvalValue;
 					bestState = minimaxEvalState;
+				} else {
+					copyState.moves.remove(copyState.moves.size() - 1);
 				}
 				copyState.turn = 1;
 			}
@@ -75,6 +80,8 @@ public class Game {
 				if(minimaxEvalValue > best) {
 					best = minimaxEvalValue;
 					bestState = minimaxEvalState;
+				} else {
+					copyState.moves.remove(copyState.moves.size() - 1);
 				}
 				alpha = Math.max(alpha, minimaxEvalValue);
 				if(beta <= alpha) {
@@ -94,6 +101,8 @@ public class Game {
 				if(minimaxEvalValue < best) {
 					best = minimaxEvalValue;
 					bestState = minimaxEvalState;
+				} else {
+					copyState.moves.remove(copyState.moves.size() - 1);
 				}
 				beta = Math.min(beta, minimaxEvalValue);
 				if(beta <= alpha) {
@@ -107,11 +116,12 @@ public class Game {
 
 	public void test() {
 
-		long starttime = System.nanoTime();
-//		State test = minimax(b, b.turn, 15, 0);
-		State test = alphaBeta(b, b.turn, 15, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-		long endtime = System.nanoTime();
-		long duration = (endtime - starttime) / 1000000;
+		long startTime = System.nanoTime();
+//		State test = minimax(b, b.turn, 13, 0);
+		State test = alphaBeta(b, b.turn, 13, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+		long endTime = System.nanoTime();
+		long duration = (endTime - startTime) / 1000000;
+
 		System.out.println(test);
 		System.out.println(test.moves);
 		System.out.println(Arrays.toString(test.score));
