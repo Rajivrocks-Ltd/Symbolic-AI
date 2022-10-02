@@ -63,7 +63,11 @@ public class Game {
 		State test = minimax(b, b.turn, 11, 0);
 		System.out.println(test);
 		System.out.println(test.moves);
+		System.out.println(Arrays.toString(test.score));
 		System.out.println(Arrays.toString(test.agentX) + " " + Arrays.toString(test.agentY));
+		System.out.println("Legal moves for A: " + test.legalMoves(0));
+		System.out.println("Legal moves for B: " + test.legalMoves(1));
+		System.out.println(test.turn + " " + whoWon(test.value(test.turn)));
 
 //		while (!b.isLeaf()){
 //			System.out.println(b.toString());

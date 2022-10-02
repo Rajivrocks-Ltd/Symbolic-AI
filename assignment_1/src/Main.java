@@ -70,7 +70,7 @@ public class Main {
 //		System.out.println("State y: \n" + y + y.food + " " + y.hashCode() + "\n");
 
 
-		Game g=new Game();
+		Game g = new Game();
 		g.test();
 	}
 

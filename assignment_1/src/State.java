@@ -226,7 +226,8 @@ public class State {
     */
 
     public State copy() {
-        return new State(deepCopyBoard(), this.agentX, this.agentY, this.score, this.turn, this.food);
+        return new State(deepCopyBoard(), deepCopyIntArray(agentX), deepCopyIntArray(agentY), deepCopyIntArray(score),
+                this.turn, this.food);
     }
 
     private char[][] deepCopyBoard() {
@@ -237,6 +238,11 @@ public class State {
             }
         }
         return newBoard;
+    }
+
+    private int[] deepCopyIntArray(int[] array) {
+        int[] newArray = new int[]{array[0], array[1]};
+        return newArray;
     }
 
     public String toString() {
