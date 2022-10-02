@@ -1,8 +1,7 @@
-import com.sun.nio.sctp.SctpSocketOption;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Vector;
+
 
 public class Game {
 	State b;
@@ -58,9 +57,61 @@ public class Game {
 		}
 	}
 
+	public State alphaBeta(State s, int forAgent, int maxDepth, int depth, double alpha, double beta) {
+		if(depth == maxDepth) {
+			return s;
+		} else if(s.isLeaf()) {
+			return s;
+		}
+
+		if(forAgent == 0) {
+			double best = Double.NEGATIVE_INFINITY;
+			State bestState = s.copy();
+			for(String move: s.legalMoves(0)) {
+				State copyState = s.copy();
+				copyState.execute(move);
+				State minimaxEvalState = alphaBeta(copyState, 1, maxDepth, depth + 1, alpha, beta);
+				double minimaxEvalValue = minimaxEvalState.value(forAgent);
+				if(minimaxEvalValue > best) {
+					best = minimaxEvalValue;
+					bestState = minimaxEvalState;
+				}
+				alpha = Math.max(alpha, minimaxEvalValue);
+				if(beta <= alpha) {
+					break;
+				}
+				copyState.turn = 0;
+			}
+			return bestState;
+		} else {
+			double best = Double.POSITIVE_INFINITY;
+			State bestState = s;
+			for(String move: s.legalMoves(1)) {
+				State copyState = s.copy();
+				copyState.execute(move);
+				State minimaxEvalState = alphaBeta(copyState, 0, maxDepth, depth + 1, alpha, beta);
+				double minimaxEvalValue = minimaxEvalState.value(forAgent);
+				if(minimaxEvalValue < best) {
+					best = minimaxEvalValue;
+					bestState = minimaxEvalState;
+				}
+				beta = Math.min(beta, minimaxEvalValue);
+				if(beta <= alpha) {
+					break;
+				}
+				copyState.turn = 1;
+			}
+			return bestState;
+		}
+	}
+
 	public void test() {
 
-		State test = minimax(b, b.turn, 11, 0);
+		long starttime = System.nanoTime();
+//		State test = minimax(b, b.turn, 15, 0);
+		State test = alphaBeta(b, b.turn, 15, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+		long endtime = System.nanoTime();
+		long duration = (endtime - starttime) / 1000000;
 		System.out.println(test);
 		System.out.println(test.moves);
 		System.out.println(Arrays.toString(test.score));
@@ -68,6 +119,7 @@ public class Game {
 		System.out.println("Legal moves for A: " + test.legalMoves(0));
 		System.out.println("Legal moves for B: " + test.legalMoves(1));
 		System.out.println(test.turn + " " + whoWon(test.value(test.turn)));
+		System.out.println("Execution time: " + duration + " Milliseconds");
 
 //		while (!b.isLeaf()){
 //			System.out.println(b.toString());
