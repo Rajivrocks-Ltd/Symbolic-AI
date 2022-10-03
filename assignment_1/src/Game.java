@@ -33,7 +33,7 @@ public class Game {
 				copyState.execute(move);
 				State minimaxEvalState = minimax(copyState, 1, maxDepth, depth + 1);
 				double minimaxEvalValue = minimaxEvalState.value(forAgent);
-				if(minimaxEvalValue > best) {
+				if(minimaxEvalValue >= best) {
 					best = minimaxEvalValue;
 					bestState = minimaxEvalState;
 				} else {
@@ -50,7 +50,7 @@ public class Game {
 				copyState.execute(move);
 				State minimaxEvalState = minimax(copyState, 0, maxDepth, depth + 1);
 				double minimaxEvalValue = minimaxEvalState.value(forAgent);
-				if(minimaxEvalValue < best) {
+				if(minimaxEvalValue <= best) {
 					best = minimaxEvalValue;
 					bestState = minimaxEvalState;
 				} else {
@@ -77,7 +77,7 @@ public class Game {
 				copyState.execute(move);
 				State minimaxEvalState = alphaBeta(copyState, 1, maxDepth, depth + 1, alpha, beta);
 				double minimaxEvalValue = minimaxEvalState.value(forAgent);
-				if(minimaxEvalValue > best) {
+				if(minimaxEvalValue >= best) {
 					best = minimaxEvalValue;
 					bestState = minimaxEvalState;
 				} else {
@@ -98,7 +98,7 @@ public class Game {
 				copyState.execute(move);
 				State minimaxEvalState = alphaBeta(copyState, 0, maxDepth, depth + 1, alpha, beta);
 				double minimaxEvalValue = minimaxEvalState.value(forAgent);
-				if(minimaxEvalValue < best) {
+				if(minimaxEvalValue <= best) {
 					best = minimaxEvalValue;
 					bestState = minimaxEvalState;
 				} else {
@@ -117,8 +117,8 @@ public class Game {
 	public void test() {
 
 		long startTime = System.nanoTime();
-//		State test = minimax(b, b.turn, 13, 0);
-		State test = alphaBeta(b, b.turn, 13, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+//		State test = minimax(b, b.turn, 11, 0);
+		State test = alphaBeta(b, b.turn, 11, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime) / 1000000;
 
