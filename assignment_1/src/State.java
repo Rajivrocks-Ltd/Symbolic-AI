@@ -73,10 +73,6 @@ public class State {
                 }
             }
         }
-
-        System.out.println("Agent x Location: " + agentX[0] + " " + agentX[1]);
-        System.out.println("Agent y Location: " + agentY[0] + " " + agentY[1]);
-
     }
 
 	/*
@@ -256,6 +252,16 @@ public class State {
             for (char aChar : chars) s.append(aChar).append(" ");
             s.append("\n");
         }
+        s.append("Current players turn: ").append(turn).append("\n");
+        s.append("Current value of the state: ").append(value(turn)).append("\n");
+        s.append("Is state a leaf: ").append(isLeaf()).append("\n");
+        s.append("AgentX Position ").append(Arrays.toString(agentX)).append("\n");
+        s.append("AgentY Position ").append(Arrays.toString(agentY)).append("\n");
+        s.append("Moves made so far: ").append(moves).append("\n");
+        s.append("Current players legal moves: ").append(legalMoves(turn)).append("\n");
+        s.append("Opponents legal moves: ").append(legalMoves(whoisOpponent())).append("\n");
+        s.append("Current score: ").append(Arrays.toString(score)).append("\n");
+        s.append("Food left: ").append(food).append("\n");
         return s.toString();
     }
 }
