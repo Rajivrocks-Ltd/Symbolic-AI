@@ -44,10 +44,6 @@ public class State {
         int h = Integer.parseInt(hw[1]);
         board = new char[w][h];
         score = new int[]{0,0};
-//        agentX = new int[2];
-//        agentY = new int[2];
-//        food = 0;
-//        turn = 0;
 
         try {
             while (reader.hasNextLine()) {
@@ -88,9 +84,7 @@ public class State {
     }
 
     public Vector<String> legalMoves() {
-		Vector<String> possible_moves;
-		possible_moves = legalMoves(turn);
-		return possible_moves;
+		return legalMoves(turn);
 	}
 
     /*
@@ -230,9 +224,7 @@ public class State {
     private char[][] deepCopyBoard() {
         char[][] newBoard = new char[board[0].length][board.length];
         for (int i = 0; i < board[0].length; i++) {
-            for (int j = 0; j < board.length; j++) {
-                newBoard[i][j] = board[i][j];
-            }
+            System.arraycopy(board[i], 0, newBoard[i], 0, board.length);
         }
         return newBoard;
     }
