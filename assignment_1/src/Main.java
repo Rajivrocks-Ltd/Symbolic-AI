@@ -1,32 +1,12 @@
 import java.io.IOException;
-import java.rmi.dgc.VMID;
+import java.util.Arrays;
+import java.util.Vector;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
-		char [][] Board = new char[0][0];
-		int[] AgentX = new int[2];
-		int []AgentY = new int[2];
-		int[] Score = new int[]{0,0};
-		int Turn = 0;
-		int Food = 0;
 
+		Game g = new Game();
+		g.test();
 
-		State s = new State(Board, AgentX, AgentY, Score, Turn, Food);
-		s.read("data\\board.txt");
-		System.out.println(s);
-		System.out.println(s.legalMoves(s.turn));
-		System.out.println(s.value(s.turn));
-
-
-//		Test copying objects.
-//		State x = new State(Board, AgentX, AgentY, Score, Turn, Food);
-//		State y = x.copy(x);
-//		y.food++;
-//		System.out.println("State x: \n" + x + x.food + " " + x.hashCode() + "\n");
-//		System.out.println("State y: \n" + y + y.food + " " + y.hashCode() + "\n");
-
-
-//		Game g=new Game();
-//		g.test();
 	}
 }
