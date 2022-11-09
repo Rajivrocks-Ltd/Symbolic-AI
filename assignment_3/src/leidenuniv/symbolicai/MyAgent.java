@@ -46,6 +46,8 @@ public class MyAgent extends Agent {
 		//Please note because f is bound and p potentially contains the variables, unifiesWith is NOT symmetrical
 		//So: unifiesWith("human(X)","human(joost)") returns X=joost, while unifiesWith("human(joost)","human(X)") returns null 
 		//If no subst is found it returns null
+
+
 		return null;
 	}
 
@@ -54,7 +56,18 @@ public class MyAgent extends Agent {
 		// Substitutes all variable terms in predicate <old> for values in substitution <s>
 		//(only if a key is present in s matching the variable name of course)
 		//Use Term.substitute(s)
-		return null;
+
+		boolean hasTerms = old.hasTerms();
+		StringBuilder string_repr = new StringBuilder();
+		if(hasTerms){
+			for(Term term:old.getTerms()){
+				term.substitute(s);
+				string_repr.append(term);
+			}
+		}
+		Sentence sentence = new Sentence(string_repr.toString());
+
+		return new Predicate(sentence);
 	}
 
 	@Override
