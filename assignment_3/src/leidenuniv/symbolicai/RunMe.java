@@ -37,7 +37,7 @@ public class RunMe {
 		hs.put("X", "joost");
 
 //		System.out.println(a.substitute(p, hs));
-		System.out.println(a.unifiesWith(p, p1));
+		System.out.println(a.unifiesWith(p1, p));
 
 		// **********************************************************************
 
@@ -50,8 +50,7 @@ public class RunMe {
 //			//wait for an enter
 //			System.out.println("Press <enter> in the java console to continue next cycle");
 //			String input = io.nextLine();
-//
 //		}
-	}
 
+	}
 }

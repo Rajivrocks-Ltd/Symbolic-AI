@@ -40,7 +40,7 @@ public class MyAgent extends Agent {
 	}
 
 	@Override
-	public HashMap<String, String> unifiesWith(Predicate p, Predicate f) {
+	public HashMap<String, String> unifiesWith(Predicate p, Predicate f) { // Done
 		//Returns the valid substitution for which p predicate unifies with f
 		//You may assume that Predicate f is fully bound (i.e., it has no variables anymore)
 		//The result can be an empty substitution, if no subst is needed to unify p with f (e.g., if p an f contain the same constants or do not have any terms)
@@ -52,20 +52,21 @@ public class MyAgent extends Agent {
 		Vector<Term> pTerms = p.getTerms();
 		Vector<Term> fTerms = f.getTerms();
 
-		if(Objects.equals(p.getName(), f.getName())) {
-			if(!p.bound()){
+		if(Objects.equals(p.getName(), f.getName()) && !p.bound()) {
 				for(Term pT: pTerms){
 					for(Term fT: fTerms){
+						if(Objects.equals(pT.toString(), fT.toString())) {
+							return null;
+						}
 						results.put(pT.toString(), fT.toString());
 					}
 				}
-			}
 			return results;
 		} else { return null; }
 	}
 
 	@Override
-	public Predicate substitute(Predicate old, HashMap<String, String> s) {
+	public Predicate substitute(Predicate old, HashMap<String, String> s) { // Done
 		// Substitutes all variable terms in predicate <old> for values in substitution <s>
 		//(only if a key is present in s matching the variable name of course)
 		//Use Term.substitute(s)

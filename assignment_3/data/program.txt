@@ -9,6 +9,5 @@
 #Add your program rules below:
 
 at(X)&passage(Y)>_goto(X,Y)
-key(I)&at(X)&=(X,I)>_grab(X,I)
-#locked(X)&"has key?! Y">_open(X,Y)
+key(I)&at(X)>_grab(X,I)
 at(X)&locked(K)&key(K)>_open(X,K)

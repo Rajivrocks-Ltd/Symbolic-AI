@@ -18,7 +18,7 @@ public abstract class Agent {
 	boolean HUMAN_DECISION=false;//change to false if you want the decide step to make the decision rather than you (check code there)
 	//boolean HUMAN_DECISION=true;//change to false if you want the decide step to make the decision rather than you (check code there)
 	//boolean DEBUG=true;
-	boolean DEBUG=false;
+	boolean DEBUG=true;
 	
 	public Agent() {
 		believes=new KB();
