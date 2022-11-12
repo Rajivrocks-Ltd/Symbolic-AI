@@ -2,6 +2,7 @@ package leidenuniv.symbolicai;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Vector;
 
 import leidenuniv.symbolicai.logic.KB;
@@ -47,8 +48,20 @@ public class MyAgent extends Agent {
 		//So: unifiesWith("human(X)","human(joost)") returns X=joost, while unifiesWith("human(joost)","human(X)") returns null 
 		//If no subst is found it returns null
 
+		HashMap<String, String> results = new HashMap<>();
+		Vector<Term> pTerms = p.getTerms();
+		Vector<Term> fTerms = f.getTerms();
 
-		return null;
+		if(Objects.equals(p.getName(), f.getName())) {
+			if(!p.bound()){
+				for(Term pT: pTerms){
+					for(Term fT: fTerms){
+						results.put(pT.toString(), fT.toString());
+					}
+				}
+			}
+			return results;
+		} else { return null; }
 	}
 
 	@Override
@@ -58,16 +71,13 @@ public class MyAgent extends Agent {
 		//Use Term.substitute(s)
 
 		boolean hasTerms = old.hasTerms();
-		StringBuilder string_repr = new StringBuilder();
 		if(hasTerms){
 			for(Term term:old.getTerms()){
 				term.substitute(s);
-				string_repr.append(term);
 			}
 		}
-		Sentence sentence = new Sentence(string_repr.toString());
 
-		return new Predicate(sentence);
+		return old;
 	}
 
 	@Override
