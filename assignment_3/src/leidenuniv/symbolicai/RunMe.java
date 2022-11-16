@@ -1,8 +1,7 @@
 package leidenuniv.symbolicai;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 import leidenuniv.symbolicai.environment.Maze;
 import leidenuniv.symbolicai.logic.Predicate;
@@ -25,21 +24,56 @@ public class RunMe {
 		//If you need to test on a simpler file, you may use this one and comment out all the other KBs:
 		//a.loadKnowledgeBase("program", new File("data/family.txt"));
 
+		// Test UnifiesWith() and Substitute()
 		// **********************************************************************
 
-		HashMap<String, String> hs = new HashMap<>();
-
-		Sentence sent = new Sentence("human(X)");
-		Sentence sent1 = new Sentence("human(joost)");
-		Predicate p = new Predicate(sent);
-		Predicate p1 = new Predicate(sent1);
-
-		hs.put("X", "joost");
+//		HashMap<String, String> hs = new HashMap<>();
+//
+//		Sentence sent = new Sentence("human(X)");
+//		Sentence sent1 = new Sentence("human(joost)");
+//		Predicate p = new Predicate(sent);
+//		Predicate p1 = new Predicate(sent1);
+//
+//		hs.put("X", "joost");
 
 //		System.out.println(a.substitute(p, hs));
-		System.out.println(a.unifiesWith(p1, p));
+//		System.out.println(a.unifiesWith(p, p1));
 
 		// **********************************************************************
+
+		//Test findAllSubstitutions()
+		// **********************************************************************
+
+//		Vector<Predicate> conditions = new Vector<>();
+//		HashMap<String, Predicate> facts = new HashMap<>();
+//		Collection<HashMap<String, String>> allSubs = new HashSet<>();
+//		HashMap<String, String> subs = new HashMap<>();
+//
+//		Predicate fact = new Predicate("human(joost)");
+//		Predicate fact1 = new Predicate("car(lamborghini)");
+//		Predicate fact2 = new Predicate("plane(jetstream)");
+//		Predicate fact3 = new Predicate("car(ferrari)");
+//
+//		facts.put(fact.toString(), fact);
+//		facts.put(fact1.toString(), fact1);
+//		facts.put(fact2.toString(), fact2);
+//		facts.put(fact3.toString(), fact3);
+//
+//		conditions.add(new Predicate("human(joost)"));
+//		conditions.add(new Predicate("car(X)"));
+//
+//		System.out.println(a.findAllSubstitions(allSubs, subs, conditions, facts));
+
+		// **********************************************************************
+
+		Predicate p = new Predicate("human(joost)");
+		Predicate p1 = new Predicate("human(joost)");
+
+		HashMap<String, String> cool = a.unifiesWith(p, p1);
+		Predicate test = a.substitute(p, cool);
+		System.out.println(cool);
+
+
 
 //		Scanner io= new Scanner(System.in);
 //
