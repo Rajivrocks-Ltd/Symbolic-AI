@@ -1,6 +1,7 @@
 package leidenuniv.symbolicai;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import leidenuniv.symbolicai.logic.KB;
 import leidenuniv.symbolicai.logic.Predicate;
@@ -33,34 +34,29 @@ public class MyAgent extends Agent {
 		//conditions is the list of conditions you  still need to find a subst for (this list shrinks the further you get in the recursion).
 		//facts is the list of predicates you need to match against (find substitutions so that a predicate from the conditions unifies with a fact)
 
-		/*
-				Another for loop, looping through facts.
-				Check if the condition unifies with any of the facts
-				if so, substitute conditions with facts.
-				add the term from conditions as the key for the "substitution" hashmap and the value of this hashmap
-				will be the term of the return of the "substitution" function which we called earlier.
-				add this hashmap "substitution" to the Collection
-				remove the condition from the vector "condition"
-				recursively call the method with the new values.
-		*/
+//		Collection<HashMap<String, String>> copyAllSubs = new HashSet<>(allSubstitutions);
 
-		if(conditions.isEmpty()) {
+		if(conditions.isEmpty()){
+			allSubstitutions.add(substitution);
+			System.out.println(allSubstitutions);
 			return !allSubstitutions.isEmpty();
 		}
 
-		List<String> keys = new ArrayList<>(facts.keySet());
-		Predicate cond = conditions.elementAt(0);
-		for (String key : keys) {
-			HashMap<String, String> unify = unifiesWith(cond, facts.get(key));
-			Predicate sub = substitute(cond, unify);
-			if (sub != null) {
-				substitution.put(sub.toString(), key);
-				allSubstitutions.add(substitution);
+		for (Predicate fact: facts.values()) {
+			HashMap<String, String> subCopy = new HashMap<>(substitution);
+			Vector<Predicate> copyConditions = new Vector<>(conditions);
+			Predicate firstCond = copyConditions.elementAt(0);
+			Predicate test = substitute(firstCond, subCopy);
+			HashMap<String, String> unify = unifiesWith(test, fact);
+//			Predicate sub = substitute(test, unify);
+			if(unify != null){
+				copyConditions.remove(0);
+				subCopy.putAll(unify);
+				findAllSubstitions(allSubstitutions, subCopy, copyConditions, facts);
 			}
 		}
-		conditions.remove(0);
-		return findAllSubstitions(allSubstitutions, new HashMap<>(), conditions, facts);
-		}
+		return !allSubstitutions.isEmpty();
+	}
 
 	@Override
 	public HashMap<String, String> unifiesWith(Predicate p, Predicate f) { // Done
@@ -74,16 +70,19 @@ public class MyAgent extends Agent {
 		HashMap<String, String> results = new HashMap<>();
 		Vector<Term> pTerms = p.getTerms();
 		Vector<Term> fTerms = f.getTerms();
+		int i = 0;
 
 		if(Objects.equals(p.getName(), f.getName()) && !p.bound()) {
-				for(Term pT: pTerms){
-					for(Term fT: fTerms){
-						if(Objects.equals(pT.toString(), fT.toString())) {
-							return results;
-						}
-						results.put(pT.toString(), fT.toString());
+			for(Term pT: pTerms){
+				if(!pT.var && (!Objects.equals(pT.toString(), fTerms.get(i).toString()))){
+					return null;
+				} if (!Objects.equals(pT.toString(), fTerms.get(i).toString())) {
+					if (pT.toString().length() == 1) {
+						results.put(pT.toString(), fTerms.get(i).toString());
 					}
 				}
+				i++;
+			}
 			return results;
 		} else { return null; }
 	}
@@ -94,16 +93,18 @@ public class MyAgent extends Agent {
 		//(only if a key is present in s matching the variable name of course)
 		//Use Term.substitute(s)
 
+		Predicate subPred = new Predicate(old.toString());
+
 		if(s == null) { return null; }
 
-		boolean hasTerms = old.hasTerms();
+		boolean hasTerms = subPred.hasTerms();
 		if(hasTerms){
-			for(Term term:old.getTerms()){
+			for(Term term:subPred.getTerms()){
 				term.substitute(s);
 			}
 		}
 
-		return old;
+		return subPred;
 	}
 
 	@Override

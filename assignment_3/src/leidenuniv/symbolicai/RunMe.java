@@ -24,56 +24,42 @@ public class RunMe {
 		//If you need to test on a simpler file, you may use this one and comment out all the other KBs:
 		//a.loadKnowledgeBase("program", new File("data/family.txt"));
 
-		// Test UnifiesWith() and Substitute()
-		// **********************************************************************
 
-//		HashMap<String, String> hs = new HashMap<>();
-//
-//		Sentence sent = new Sentence("human(X)");
-//		Sentence sent1 = new Sentence("human(joost)");
-//		Predicate p = new Predicate(sent);
-//		Predicate p1 = new Predicate(sent1);
-//
-//		hs.put("X", "joost");
+		//findAllSubs
+		//**************************************************************************
 
-//		System.out.println(a.substitute(p, hs));
-//		System.out.println(a.unifiesWith(p, p1));
+		HashMap<String, Predicate> facts = new HashMap<>();
+		HashMap<String, String> substitution = new HashMap<>();
+		Vector<Predicate> conditions = new Vector<>();
+		Collection<HashMap<String, String>> collection = new HashSet<>();
 
-		// **********************************************************************
+		//Facts
+		Predicate fact1 = new Predicate("mens(henk)");
+		Predicate fact2 = new Predicate("mens(joost)");
+		Predicate fact3 = new Predicate("mens(sacha)");
+		Predicate fact4 = new Predicate("nationality(joost,dutch)");
+		Predicate fact5 = new Predicate("nationality(sacha,dutch)");
 
-		//Test findAllSubstitutions()
-		// **********************************************************************
-
-//		Vector<Predicate> conditions = new Vector<>();
-//		HashMap<String, Predicate> facts = new HashMap<>();
-//		Collection<HashMap<String, String>> allSubs = new HashSet<>();
-//		HashMap<String, String> subs = new HashMap<>();
-//
-//		Predicate fact = new Predicate("human(joost)");
-//		Predicate fact1 = new Predicate("car(lamborghini)");
-//		Predicate fact2 = new Predicate("plane(jetstream)");
-//		Predicate fact3 = new Predicate("car(ferrari)");
-//
-//		facts.put(fact.toString(), fact);
-//		facts.put(fact1.toString(), fact1);
-//		facts.put(fact2.toString(), fact2);
+		facts.put(fact1.toString(), fact1);
+		facts.put(fact2.toString(), fact2);
 //		facts.put(fact3.toString(), fact3);
+		facts.put(fact4.toString(), fact4);
+//		facts.put(fact5.toString(), fact5);
+
+		//All predicates for the condition
+		Predicate first = new Predicate("mens(X)");
+		Predicate second = new Predicate("nationality(X,Y)");
+		conditions.add(0, first);
+		conditions.add(1, second);
+
+		System.out.println(a.findAllSubstitions(collection, substitution, conditions, facts));
+
+		//**************************************************************************
+
+//		Predicate test = new Predicate("nat(joost,X,Y)");
+//		Predicate test1 = new Predicate("nat(joost,dutch,Y)");
 //
-//		conditions.add(new Predicate("human(joost)"));
-//		conditions.add(new Predicate("car(X)"));
-//
-//		System.out.println(a.findAllSubstitions(allSubs, subs, conditions, facts));
-
-		// **********************************************************************
-
-		Predicate p = new Predicate("human(joost)");
-		Predicate p1 = new Predicate("human(joost)");
-
-		HashMap<String, String> cool = a.unifiesWith(p, p1);
-		Predicate test = a.substitute(p, cool);
-		System.out.println(cool);
-
-
+//		System.out.println(a.unifiesWith(test, test1));
 
 //		Scanner io= new Scanner(System.in);
 //
