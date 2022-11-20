@@ -34,21 +34,33 @@ public class MyAgent extends Agent {
 		//conditions is the list of conditions you  still need to find a subst for (this list shrinks the further you get in the recursion).
 		//facts is the list of predicates you need to match against (find substitutions so that a predicate from the conditions unifies with a fact)
 
-//		Collection<HashMap<String, String>> copyAllSubs = new HashSet<>(allSubstitutions);
-
 		if(conditions.isEmpty()){
 			allSubstitutions.add(substitution);
-			System.out.println(allSubstitutions);
 			return !allSubstitutions.isEmpty();
 		}
 
+		boolean visited = false;
 		for (Predicate fact: facts.values()) {
 			HashMap<String, String> subCopy = new HashMap<>(substitution);
 			Vector<Predicate> copyConditions = new Vector<>(conditions);
 			Predicate firstCond = copyConditions.elementAt(0);
-			Predicate test = substitute(firstCond, subCopy);
-			HashMap<String, String> unify = unifiesWith(test, fact);
-//			Predicate sub = substitute(test, unify);
+			HashMap<String, String> unify = new HashMap<>();
+
+			if((firstCond.eql || firstCond.not) && !visited){
+				visited = true;
+				int i = 0;
+
+				Predicate sub = substitute(firstCond, subCopy);
+				Vector<Term> fTerms = sub.getTerms();
+				for(Term term: firstCond.getTerms()){
+					unify.put(term.toString(), fTerms.get(i).toString());
+					i++;
+				}
+			} else {
+				Predicate test = substitute(firstCond, subCopy);
+				unify = unifiesWith(test, fact);
+			}
+
 			if(unify != null){
 				copyConditions.remove(0);
 				subCopy.putAll(unify);

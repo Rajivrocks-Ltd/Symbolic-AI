@@ -63,6 +63,7 @@
       <workItem from="1668600569281" duration="14572000" />
       <workItem from="1668859720749" duration="24846000" />
       <workItem from="1668904050916" duration="199000" />
+      <workItem from="1668946784379" duration="6914000" />
     </task>
     <servers />
   </component>
@@ -79,7 +80,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/leidenuniv/symbolicai/RunMe.java</url>
-          <line>70</line>
+          <line>71</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -89,8 +90,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/leidenuniv/symbolicai/MyAgent.java</url>
-          <line>45</line>
-          <option name="timeStamp" value="22" />
+          <line>69</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.lang.ArrayIndexOutOfBoundsException" package="java.lang" />

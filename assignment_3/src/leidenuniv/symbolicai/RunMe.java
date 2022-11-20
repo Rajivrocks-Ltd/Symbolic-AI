@@ -1,5 +1,6 @@
 package leidenuniv.symbolicai;
 
+import java.io.Console;
 import java.io.File;
 import java.util.*;
 
@@ -38,28 +39,28 @@ public class RunMe {
 		Predicate fact2 = new Predicate("mens(joost)");
 		Predicate fact3 = new Predicate("mens(sacha)");
 		Predicate fact4 = new Predicate("nationality(joost,dutch)");
+		Predicate fact6 = new Predicate("nationality(joost,Belgian)");
 		Predicate fact5 = new Predicate("nationality(sacha,dutch)");
 
 		facts.put(fact1.toString(), fact1);
 		facts.put(fact2.toString(), fact2);
-//		facts.put(fact3.toString(), fact3);
+		facts.put(fact3.toString(), fact3);
 		facts.put(fact4.toString(), fact4);
-//		facts.put(fact5.toString(), fact5);
+		facts.put(fact5.toString(), fact5);
+		facts.put(fact6.toString(), fact6);
 
 		//All predicates for the condition
 		Predicate first = new Predicate("mens(X)");
 		Predicate second = new Predicate("nationality(X,Y)");
+		Predicate third = new Predicate("!=(X,Y)");
 		conditions.add(0, first);
 		conditions.add(1, second);
+		conditions.add(2, third);
 
 		System.out.println(a.findAllSubstitions(collection, substitution, conditions, facts));
 
 		//**************************************************************************
 
-//		Predicate test = new Predicate("nat(joost,X,Y)");
-//		Predicate test1 = new Predicate("nat(joost,dutch,Y)");
-//
-//		System.out.println(a.unifiesWith(test, test1));
 
 //		Scanner io= new Scanner(System.in);
 //
