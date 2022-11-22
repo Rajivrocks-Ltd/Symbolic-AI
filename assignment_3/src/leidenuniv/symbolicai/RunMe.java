@@ -35,9 +35,9 @@ public class RunMe {
 		Collection<HashMap<String, String>> collection = new HashSet<>();
 
 		//Facts
-		Predicate fact1 = new Predicate("mens(henk)");
-		Predicate fact2 = new Predicate("mens(joost)");
-		Predicate fact3 = new Predicate("mens(sacha)");
+		Predicate fact1 = new Predicate("mens(henk,dutch)");
+		Predicate fact2 = new Predicate("mens(joost,dutch)");
+		Predicate fact3 = new Predicate("mens(sacha,dutch)");
 		Predicate fact4 = new Predicate("nationality(joost,dutch)");
 		Predicate fact6 = new Predicate("nationality(joost,Belgian)");
 		Predicate fact5 = new Predicate("nationality(sacha,dutch)");
@@ -50,9 +50,9 @@ public class RunMe {
 		facts.put(fact6.toString(), fact6);
 
 		//All predicates for the condition
-		Predicate first = new Predicate("mens(X)");
+		Predicate first = new Predicate("mens(X,Z)");
 		Predicate second = new Predicate("nationality(X,Y)");
-		Predicate third = new Predicate("!=(X,Y)");
+		Predicate third = new Predicate("!=(Z,Y)");
 		conditions.add(0, first);
 		conditions.add(1, second);
 		conditions.add(2, third);

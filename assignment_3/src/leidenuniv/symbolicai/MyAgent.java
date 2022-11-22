@@ -19,7 +19,17 @@ public class MyAgent extends Agent {
 		//The resulting KB includes all deduced predicates, actions, additions and deletions, and goals.
 		//These are then processed by processFacts() (which is already implemented for you)
 		//HINT: You should assume that forwardChain only allows *bound* predicates to be added to the facts list for now.
-		
+
+		Vector<Predicate> deducedFacts = new Vector<>();
+
+		for(Sentence sent: kb.rules()){
+			HashMap<String, Predicate> facts = new HashMap<>();
+			Vector<Predicate> conditions = new Vector<>();
+
+
+
+		}
+
 		return null;
 	}
 
@@ -36,6 +46,7 @@ public class MyAgent extends Agent {
 
 		if(conditions.isEmpty()){
 			allSubstitutions.add(substitution);
+			System.out.println(allSubstitutions);
 			return !allSubstitutions.isEmpty();
 		}
 
@@ -46,15 +57,17 @@ public class MyAgent extends Agent {
 			Predicate firstCond = copyConditions.elementAt(0);
 			HashMap<String, String> unify = new HashMap<>();
 
-			if((firstCond.eql || firstCond.not) && !visited){
+			if(firstCond.eql && !visited) {
 				visited = true;
-				int i = 0;
-
 				Predicate sub = substitute(firstCond, subCopy);
-				Vector<Term> fTerms = sub.getTerms();
-				for(Term term: firstCond.getTerms()){
-					unify.put(term.toString(), fTerms.get(i).toString());
-					i++;
+				if (!sub.eql()) {
+					continue;
+				}
+			} else if(firstCond.not && !visited) {
+				visited = true;
+				Predicate sub = substitute(firstCond, subCopy);
+				if(!sub.not()) {
+					continue;
 				}
 			} else {
 				Predicate test = substitute(firstCond, subCopy);

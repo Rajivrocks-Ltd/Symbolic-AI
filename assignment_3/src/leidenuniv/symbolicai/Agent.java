@@ -18,7 +18,7 @@ public abstract class Agent {
 	boolean HUMAN_DECISION=false;//change to false if you want the decide step to make the decision rather than you (check code there)
 	//boolean HUMAN_DECISION=true;//change to false if you want the decide step to make the decision rather than you (check code there)
 	//boolean DEBUG=true;
-	boolean DEBUG=true;
+	boolean DEBUG=false;
 	
 	public Agent() {
 		believes=new KB();
@@ -50,7 +50,10 @@ public abstract class Agent {
 		//You process this list using Agent.processFacts()
 		KB percepts=w.generatePercepts();
 		if (DEBUG) System.out.println("PERCEPTS:\n"+percepts);
-		KB result=forwardChain(perceptRules.union(percepts).union(believes)); 
+		KB result=forwardChain(perceptRules.union(percepts).union(believes));
+		System.out.println("------------------------------------------------------------------");
+		System.out.println(perceptRules.union(believes).union(percepts));
+		System.out.println("------------------------------------------------------------------");
 		//System.out.println("PERCEPT INFERENCE:\n"+result);//uncomment this if you want to know what facts your forward chaining inference produces
 		processFacts(result, believes, desires, intentions, DEBUG);
 	}
