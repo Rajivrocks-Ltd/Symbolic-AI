@@ -7,6 +7,6 @@
 #Add your percept rules below:
 
 at(X)&passage(Y)>+link(X,Y)
-at(X)>+currPosition(X)
-key(K)>+keySpotted(K)
-locked(K)>+doorLocked(K)
+at(X)>+at(X)
+key(K)>+key(K)
+locked(K)>+locked(K)

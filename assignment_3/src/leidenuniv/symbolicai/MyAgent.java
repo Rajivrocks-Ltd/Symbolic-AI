@@ -1,16 +1,16 @@
 package leidenuniv.symbolicai;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import leidenuniv.symbolicai.logic.KB;
 import leidenuniv.symbolicai.logic.Predicate;
 import leidenuniv.symbolicai.logic.Sentence;
 import leidenuniv.symbolicai.logic.Term;
 
+
 public class MyAgent extends Agent {
-	
-	
+
+
 
 	@Override
 	public KB forwardChain(KB kb) {
@@ -20,17 +20,51 @@ public class MyAgent extends Agent {
 		//These are then processed by processFacts() (which is already implemented for you)
 		//HINT: You should assume that forwardChain only allows *bound* predicates to be added to the facts list for now.
 
-		Vector<Predicate> deducedFacts = new Vector<>();
+		// key(a)>open(X)
+		// sent1
+		// sent2
+		// sent3
 
-		for(Sentence sent: kb.rules()){
-			HashMap<String, Predicate> facts = new HashMap<>();
-			Vector<Predicate> conditions = new Vector<>();
+		KB cleanKB = new KB();
 
+		HashMap<String, Predicate> facts = new HashMap<>();
+		Vector<Predicate> factList = new Vector<>();
 
-
+		for(Sentence sent: kb.rules()) {
+			for(Predicate p: sent.conclusions) {
+				if(p.bound() && !factList.contains(p)) {
+					factList.add(p);
+					facts.put(p.toString(),p);
+				}
+			}
 		}
 
-		return null;
+		// logic actual forwardChaining.
+		while(!factList.isEmpty()){
+			for(Sentence sent: kb.rules()){
+				Vector<Predicate> conditions = new Vector<>(sent.conditions);
+
+				Collection<HashMap<String, String>> collection = new HashSet<>();
+				HashMap<String, String> substitutions = new HashMap<>();
+				findAllSubstitions(collection, substitutions, conditions, facts);
+				for(HashMap<String, String> sub: collection){
+					for(Predicate c: sent.conclusions){
+						Predicate s = substitute(c, sub);
+						factList.add(s);
+						facts.put(s.toString(), s);
+					}
+				}
+
+				factList.removeIf(kb::contains);
+				factList.removeIf(cleanKB::contains);
+
+				for(Predicate f: factList){
+					Sentence s = new Sentence(f.toString());
+					cleanKB.add(s);
+				}
+			}
+		}
+		return cleanKB;
 	}
 
 	@Override
@@ -46,7 +80,7 @@ public class MyAgent extends Agent {
 
 		if(conditions.isEmpty()){
 			allSubstitutions.add(substitution);
-			System.out.println(allSubstitutions);
+//			System.out.println(allSubstitutions);
 			return !allSubstitutions.isEmpty();
 		}
 

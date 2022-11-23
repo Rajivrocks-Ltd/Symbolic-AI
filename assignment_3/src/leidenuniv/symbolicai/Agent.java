@@ -52,7 +52,10 @@ public abstract class Agent {
 		if (DEBUG) System.out.println("PERCEPTS:\n"+percepts);
 		KB result=forwardChain(perceptRules.union(percepts).union(believes));
 		System.out.println("------------------------------------------------------------------");
-		System.out.println(perceptRules.union(believes).union(percepts));
+//		System.out.println(perceptRules.union(believes).union(percepts));
+//		for(Sentence p: perceptRules.union(believes).union(percepts)) {
+//			System.out.println(p);
+//		}
 		System.out.println("------------------------------------------------------------------");
 		//System.out.println("PERCEPT INFERENCE:\n"+result);//uncomment this if you want to know what facts your forward chaining inference produces
 		processFacts(result, believes, desires, intentions, DEBUG);

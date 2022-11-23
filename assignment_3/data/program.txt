@@ -10,4 +10,4 @@
 
 at(X)&passage(Y)>_goto(X,Y)
 key(I)&at(X)>_grab(X,I)
-at(X)&locked(K)&key(K)>_open(X,K)
+at(X)&locked(K)&keyInv(K)>_open(X,K)
