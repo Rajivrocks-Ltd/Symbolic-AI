@@ -10,3 +10,5 @@ at(X)&passage(Y)>+link(X,Y)
 at(X)>+at(X)
 key(K)>+key(K)
 locked(K)>+locked(K)
+
+exit>+exit
