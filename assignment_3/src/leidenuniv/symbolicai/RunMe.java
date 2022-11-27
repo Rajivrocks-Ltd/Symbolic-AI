@@ -82,10 +82,14 @@ public class RunMe {
 //		Sentence condition1 = new Sentence("citizen(X,Y)&mens(X,Z)&=(Y,Z)>passport(X,Y)");
 		Sentence condition = new Sentence("lijp(X)&!mens(X)>cool(X)");
 //		kb.add(condition1);
-		kb.add(condition);
-		KB result = a.forwardChain(kb);
-		System.out.println("===================================================");
-		System.out.println(result.rules());
+//		kb.add(condition);
+//		KB result = a.forwardChain(kb);
+//		System.out.println("===================================================");
+//		System.out.println(result.rules());
+
+		Predicate test = new Predicate("mens(joost,Y)");
+		Predicate test1 = new Predicate("mens(joost,cool)");
+		System.out.println(a.unifiesWith(test, test1));
 
 
 		//**************************************************************************

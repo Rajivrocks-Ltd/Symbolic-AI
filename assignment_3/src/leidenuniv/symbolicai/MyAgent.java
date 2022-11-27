@@ -147,7 +147,7 @@ public class MyAgent extends Agent {
 		int i = 0;
 		int j = 0;
 
-		// Handling of
+		// Handling of negation
 		if(p.neg && Objects.equals(p.getName(), f.getName())){
 			for(Term pT: pTerms){
 				if(Objects.equals(pT.toString(), fTerms.get(j).toString())){
@@ -161,7 +161,8 @@ public class MyAgent extends Agent {
 			return results;
 		}
 
-		if(Objects.equals(p.getName(), f.getName()) && !p.bound()) {
+		// Normal unifies with without negation handling.
+		if(Objects.equals(p.getName(), f.getName())) {
 			for(Term pT: pTerms){
 				if(!pT.var && (!Objects.equals(pT.toString(), fTerms.get(i).toString()))){
 					return null;

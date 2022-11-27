@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7f33059e-998c-41e5-be28-4077561e050a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/actions.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/actions.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/percepts.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/percepts.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/program.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/program.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/leidenuniv/symbolicai/MyAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/leidenuniv/symbolicai/MyAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/leidenuniv/symbolicai/RunMe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/leidenuniv/symbolicai/RunMe.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +75,7 @@
       <workItem from="1669308124651" duration="5098000" />
       <workItem from="1669466240920" duration="6774000" />
       <workItem from="1669493376021" duration="7202000" />
-      <workItem from="1669552261197" duration="2250000" />
+      <workItem from="1669552261197" duration="4423000" />
     </task>
     <servers />
   </component>
@@ -93,7 +92,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/leidenuniv/symbolicai/RunMe.java</url>
-          <line>99</line>
+          <line>103</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
