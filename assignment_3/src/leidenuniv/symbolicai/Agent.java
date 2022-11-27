@@ -17,8 +17,8 @@ public abstract class Agent {
 	KB believes,desires, intentions;//these are dynamic facts, believes are facts, intentions are actions that are possible, desires are goal predicates
 	boolean HUMAN_DECISION=false;//change to false if you want the decide step to make the decision rather than you (check code there)
 	//boolean HUMAN_DECISION=true;//change to false if you want the decide step to make the decision rather than you (check code there)
-	//boolean DEBUG=true;
-	boolean DEBUG=false;
+	boolean DEBUG=true;
+//	boolean DEBUG=false;
 	
 	public Agent() {
 		believes=new KB();

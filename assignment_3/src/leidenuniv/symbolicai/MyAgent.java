@@ -26,13 +26,14 @@ public class MyAgent extends Agent {
 		// sent3
 
 		KB cleanKB = new KB();
+		Boolean result = null;
 
 		HashMap<String, Predicate> facts = new HashMap<>();
 		Vector<Predicate> factList = new Vector<>();
 
 		for(Sentence sent: kb.rules()) {
 			for(Predicate p: sent.conclusions) {
-				if(p.bound() && !factList.contains(p)) {
+				if(p.bound() && !factList.contains(p) && sent.conditions.isEmpty()) {
 					factList.add(p);
 					facts.put(p.toString(),p);
 				}
@@ -46,15 +47,18 @@ public class MyAgent extends Agent {
 
 				Collection<HashMap<String, String>> collection = new HashSet<>();
 				HashMap<String, String> substitutions = new HashMap<>();
-				findAllSubstitions(collection, substitutions, conditions, facts);
-				for(HashMap<String, String> sub: collection){
-					for(Predicate c: sent.conclusions){
-						Predicate s = substitute(c, sub);
-						factList.add(s);
-						facts.put(s.toString(), s);
+				result = findAllSubstitions(collection, substitutions, conditions, facts);
+				if(result){
+					for(HashMap<String, String> sub: collection){
+						for(Predicate c: sent.conclusions){
+							Predicate s = substitute(c, sub);
+							if(!facts.containsKey(s.toString()) && !factList.contains(s)) {
+								factList.add(s);
+								facts.put(s.toString(), s);
+							}
+						}
 					}
 				}
-
 				factList.removeIf(kb::contains);
 				factList.removeIf(cleanKB::contains);
 
@@ -78,34 +82,42 @@ public class MyAgent extends Agent {
 		//conditions is the list of conditions you  still need to find a subst for (this list shrinks the further you get in the recursion).
 		//facts is the list of predicates you need to match against (find substitutions so that a predicate from the conditions unifies with a fact)
 
+		Vector<Boolean> isNegated = new Vector<>();
+		boolean visited = false;
+
 		if(conditions.isEmpty()){
 			allSubstitutions.add(substitution);
 //			System.out.println(allSubstitutions);
 			return !allSubstitutions.isEmpty();
 		}
-
-		boolean visited = false;
 		for (Predicate fact: facts.values()) {
 			HashMap<String, String> subCopy = new HashMap<>(substitution);
 			Vector<Predicate> copyConditions = new Vector<>(conditions);
 			Predicate firstCond = copyConditions.elementAt(0);
 			HashMap<String, String> unify = new HashMap<>();
+			Predicate sub = substitute(firstCond, subCopy);
 
 			if(firstCond.eql && !visited) {
 				visited = true;
-				Predicate sub = substitute(firstCond, subCopy);
 				if (!sub.eql()) {
 					continue;
 				}
 			} else if(firstCond.not && !visited) {
 				visited = true;
-				Predicate sub = substitute(firstCond, subCopy);
 				if(!sub.not()) {
 					continue;
 				}
+			} else if(firstCond.neg && !visited){
+//				visited = true;
+				unify = unifiesWith(sub, fact);
+
+				if(unify == null) {
+					isNegated.add(false);
+				} else {
+					isNegated.add(true);
+				}
 			} else {
-				Predicate test = substitute(firstCond, subCopy);
-				unify = unifiesWith(test, fact);
+				unify = unifiesWith(sub, fact);
 			}
 
 			if(unify != null){
@@ -114,7 +126,10 @@ public class MyAgent extends Agent {
 				findAllSubstitions(allSubstitutions, subCopy, copyConditions, facts);
 			}
 		}
-		return !allSubstitutions.isEmpty();
+		if(isNegated.contains(false)){
+			return false;
+		}
+		return !allSubstitutions.isEmpty() && !isNegated.contains(false);
 	}
 
 	@Override
@@ -130,15 +145,28 @@ public class MyAgent extends Agent {
 		Vector<Term> pTerms = p.getTerms();
 		Vector<Term> fTerms = f.getTerms();
 		int i = 0;
+		int j = 0;
+
+		// Handling of
+		if(p.neg && Objects.equals(p.getName(), f.getName())){
+			for(Term pT: pTerms){
+				if(Objects.equals(pT.toString(), fTerms.get(j).toString())){
+					return null;
+				} else {
+					j++;
+				}
+			}
+			return results;
+		} else if(p.neg){
+			return results;
+		}
 
 		if(Objects.equals(p.getName(), f.getName()) && !p.bound()) {
 			for(Term pT: pTerms){
 				if(!pT.var && (!Objects.equals(pT.toString(), fTerms.get(i).toString()))){
 					return null;
-				} if (!Objects.equals(pT.toString(), fTerms.get(i).toString())) {
-					if (pT.toString().length() == 1) {
-						results.put(pT.toString(), fTerms.get(i).toString());
-					}
+				} if(!Objects.equals(pT.toString(), fTerms.get(i).toString())) {
+					results.put(pT.toString(), fTerms.get(i).toString());
 				}
 				i++;
 			}
