@@ -87,7 +87,7 @@ public class MyAgent extends Agent {
 
 		if(conditions.isEmpty()){
 			allSubstitutions.add(substitution);
-//			System.out.println(allSubstitutions);
+			System.out.println(allSubstitutions);
 			return !allSubstitutions.isEmpty();
 		}
 		for (Predicate fact: facts.values()) {

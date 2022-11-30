@@ -46,24 +46,24 @@ public class RunMe {
 //		Predicate fact5 = new Predicate("nationality(sacha,dutch)");
 		Predicate fact1 = new Predicate("lijp(joost)");
 		Predicate fact2 = new Predicate("mens(joost)");
-//		Predicate fact3 = new Predicate("lijp(sacha)");
+		Predicate fact3 = new Predicate("lijp(sacha)");
 
 		Sentence sent1 = new Sentence(fact1.toString());
-//		Sentence sent2 = new Sentence(fact2.toString());
-//		Sentence sent3 = new Sentence(fact3.toString());
+		Sentence sent2 = new Sentence(fact2.toString());
+		Sentence sent3 = new Sentence(fact3.toString());
 //		Sentence sent4 = new Sentence(fact4.toString());
 //		Sentence sent5 = new Sentence(fact5.toString());
 //		Sentence sent6 = new Sentence(fact6.toString());
 		kb.add(sent1);
-//		kb.add(sent2);
-//		kb.add(sent3);
+		kb.add(sent2);
+		kb.add(sent3);
 //		kb.add(sent4);
 //		kb.add(sent5);
 //		kb.add(sent6);
 
 		facts.put(fact1.toString(), fact1);
 		facts.put(fact2.toString(), fact2);
-//		facts.put(fact3.toString(), fact3);
+		facts.put(fact3.toString(), fact3);
 //		facts.put(fact4.toString(), fact4);
 //		facts.put(fact5.toString(), fact5);
 //		facts.put(fact6.toString(), fact6);
@@ -83,17 +83,18 @@ public class RunMe {
 
 		facts.put(fact1.toString(), fact1);
 		facts.put(fact2.toString(), fact2);
+		facts.put(fact3.toString(), fact3);
 //
-		System.out.println(a.findAllSubstitions(collection, substitution, conditions, facts));
+//		System.out.println(a.findAllSubstitions(collection, substitution, conditions, facts));
 
 //		Sentence condition = new Sentence("mens(X,Z)&nationality(X,Y)&=(Z,Y)&!mens(X,Y)>citizen(X,Z)");
 //		Sentence condition1 = new Sentence("citizen(X,Y)&mens(X,Z)&=(Y,Z)>passport(X,Y)");
-//		Sentence condition = new Sentence("lijp(X)&!mens(X)>cool(X)");
+		Sentence condition = new Sentence("lijp(X)&!mens(X)>cool(X)");
 //		kb.add(condition1);
-//		kb.add(condition);
-//		KB result = a.forwardChain(kb);
+		kb.add(condition);
+		KB result = a.forwardChain(kb);
 //		System.out.println("===================================================");
-//		System.out.println(result.rules());
+		System.out.println(result.rules());
 
 
 
