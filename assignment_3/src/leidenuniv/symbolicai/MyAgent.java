@@ -26,7 +26,7 @@ public class MyAgent extends Agent {
 		// sent3
 
 		KB cleanKB = new KB();
-		Boolean result = null;
+		Boolean result;
 
 		HashMap<String, Predicate> facts = new HashMap<>();
 		Vector<Predicate> factList = new Vector<>();
@@ -82,8 +82,8 @@ public class MyAgent extends Agent {
 		//conditions is the list of conditions you  still need to find a subst for (this list shrinks the further you get in the recursion).
 		//facts is the list of predicates you need to match against (find substitutions so that a predicate from the conditions unifies with a fact)
 
-		Vector<Boolean> isNegated = new Vector<>();
 		boolean visited = false;
+		Vector<Integer> isNegated = new Vector<>();
 
 		if(conditions.isEmpty()){
 			allSubstitutions.add(substitution);
@@ -98,11 +98,13 @@ public class MyAgent extends Agent {
 			Predicate sub = substitute(firstCond, subCopy);
 
 			if(firstCond.eql && !visited) {
+				isNegated.add(1);
 				visited = true;
 				if (!sub.eql()) {
 					continue;
 				}
 			} else if(firstCond.not && !visited) {
+				isNegated.add(1);
 				visited = true;
 				if(!sub.not()) {
 					continue;
@@ -112,24 +114,35 @@ public class MyAgent extends Agent {
 				unify = unifiesWith(sub, fact);
 
 				if(unify == null) {
-					isNegated.add(false);
+					isNegated.add(0);
 				} else {
-					isNegated.add(true);
+					isNegated.add(1);
 				}
 			} else {
+				isNegated.add(1);
 				unify = unifiesWith(sub, fact);
 			}
 
+			if(isNegated.size() == facts.size()){
+				System.out.println("Cool");
+				if (isNegated.contains(0)) {
+					return false;
+				}
+			}
+
 			if(unify != null){
-				copyConditions.remove(0);
-				subCopy.putAll(unify);
-				findAllSubstitions(allSubstitutions, subCopy, copyConditions, facts);
+				if(!sub.neg){
+					copyConditions.remove(0);
+					subCopy.putAll(unify);
+					findAllSubstitions(allSubstitutions, subCopy, copyConditions, facts);
+				} else if(isNegated.size() == facts.size()){
+					copyConditions.remove(0);
+					subCopy.putAll(unify);
+					findAllSubstitions(allSubstitutions, subCopy, copyConditions, facts);
+				}
 			}
 		}
-		if(isNegated.contains(false)){
-			return false;
-		}
-		return !allSubstitutions.isEmpty() && !isNegated.contains(false);
+		return !allSubstitutions.isEmpty() && !isNegated.contains(0);
 	}
 
 	@Override

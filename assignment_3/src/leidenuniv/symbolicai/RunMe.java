@@ -46,15 +46,16 @@ public class RunMe {
 //		Predicate fact5 = new Predicate("nationality(sacha,dutch)");
 		Predicate fact1 = new Predicate("lijp(joost)");
 		Predicate fact2 = new Predicate("mens(joost)");
+//		Predicate fact3 = new Predicate("lijp(sacha)");
 
 		Sentence sent1 = new Sentence(fact1.toString());
-		Sentence sent2 = new Sentence(fact2.toString());
+//		Sentence sent2 = new Sentence(fact2.toString());
 //		Sentence sent3 = new Sentence(fact3.toString());
 //		Sentence sent4 = new Sentence(fact4.toString());
 //		Sentence sent5 = new Sentence(fact5.toString());
 //		Sentence sent6 = new Sentence(fact6.toString());
 		kb.add(sent1);
-		kb.add(sent2);
+//		kb.add(sent2);
 //		kb.add(sent3);
 //		kb.add(sent4);
 //		kb.add(sent5);
@@ -71,25 +72,29 @@ public class RunMe {
 //		Predicate first = new Predicate("mens(X,Z)");
 //		Predicate second = new Predicate("nationality(X,Y)");
 //		Predicate third = new Predicate("!=(Z,Y)");
-//		Predicate fourth = new Predicate("!mens(X,Y)");
-		Predicate first = new Predicate("!mens(X)");
+
+		// Negation test
+		Predicate first = new Predicate("lijp(X)");
+		Predicate second = new Predicate("!mens(X)");
 		conditions.add(0, first);
-//		conditions.add(1, second);
+		conditions.add(1, second);
 //		conditions.add(2, third);
 //		conditions.add(3, fourth);
 
+		facts.put(fact1.toString(), fact1);
+		facts.put(fact2.toString(), fact2);
+//
+		System.out.println(a.findAllSubstitions(collection, substitution, conditions, facts));
+
 //		Sentence condition = new Sentence("mens(X,Z)&nationality(X,Y)&=(Z,Y)&!mens(X,Y)>citizen(X,Z)");
 //		Sentence condition1 = new Sentence("citizen(X,Y)&mens(X,Z)&=(Y,Z)>passport(X,Y)");
-		Sentence condition = new Sentence("lijp(X)&!mens(X)>cool(X)");
+//		Sentence condition = new Sentence("lijp(X)&!mens(X)>cool(X)");
 //		kb.add(condition1);
 //		kb.add(condition);
 //		KB result = a.forwardChain(kb);
 //		System.out.println("===================================================");
 //		System.out.println(result.rules());
 
-		Predicate test = new Predicate("mens(joost,Y)");
-		Predicate test1 = new Predicate("mens(joost,cool)");
-		System.out.println(a.unifiesWith(test, test1));
 
 
 		//**************************************************************************
