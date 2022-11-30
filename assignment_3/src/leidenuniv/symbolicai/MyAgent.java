@@ -98,13 +98,13 @@ public class MyAgent extends Agent {
 			Predicate sub = substitute(firstCond, subCopy);
 
 			if(firstCond.eql && !visited) {
-				isNegated.add(1);
+				isNegated.add(0);
 				visited = true;
 				if (!sub.eql()) {
 					continue;
 				}
 			} else if(firstCond.not && !visited) {
-				isNegated.add(1);
+				isNegated.add(0);
 				visited = true;
 				if(!sub.not()) {
 					continue;
@@ -114,18 +114,18 @@ public class MyAgent extends Agent {
 				unify = unifiesWith(sub, fact);
 
 				if(unify == null) {
-					isNegated.add(0);
-				} else {
 					isNegated.add(1);
+				} else {
+					isNegated.add(0);
 				}
 			} else {
-				isNegated.add(1);
+				isNegated.add(0);
 				unify = unifiesWith(sub, fact);
 			}
 
 			if(isNegated.size() == facts.size()){
 				System.out.println("Cool");
-				if (isNegated.contains(0)) {
+				if (isNegated.contains(1)) {
 					return false;
 				}
 			}
@@ -142,7 +142,7 @@ public class MyAgent extends Agent {
 				}
 			}
 		}
-		return !allSubstitutions.isEmpty() && !isNegated.contains(0);
+		return !allSubstitutions.isEmpty() && !isNegated.contains(1);
 	}
 
 	@Override

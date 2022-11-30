@@ -47,6 +47,7 @@ public class RunMe {
 		Predicate fact1 = new Predicate("lijp(joost)");
 		Predicate fact2 = new Predicate("mens(joost)");
 		Predicate fact3 = new Predicate("lijp(sacha)");
+//		Predicate fact4 = new Predicate("mens(sacha)");
 
 		Sentence sent1 = new Sentence(fact1.toString());
 		Sentence sent2 = new Sentence(fact2.toString());
@@ -84,6 +85,7 @@ public class RunMe {
 		facts.put(fact1.toString(), fact1);
 		facts.put(fact2.toString(), fact2);
 		facts.put(fact3.toString(), fact3);
+//		facts.put(fact4.toString(), fact4);
 //
 //		System.out.println(a.findAllSubstitions(collection, substitution, conditions, facts));
 
