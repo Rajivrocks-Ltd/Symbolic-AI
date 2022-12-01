@@ -3,6 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="7f33059e-998c-41e5-be28-4077561e050a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/actions.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/actions.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/percepts.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/percepts.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/program.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/program.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/leidenuniv/symbolicai/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/leidenuniv/symbolicai/Agent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/leidenuniv/symbolicai/MyAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/leidenuniv/symbolicai/MyAgent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/leidenuniv/symbolicai/RunMe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/leidenuniv/symbolicai/RunMe.java" afterDir="false" />
     </list>
@@ -81,7 +85,9 @@
       <workItem from="1669810580413" duration="2091000" />
       <workItem from="1669815003633" duration="8017000" />
       <workItem from="1669825075107" duration="933000" />
-      <workItem from="1669851962471" duration="1996000" />
+      <workItem from="1669851962471" duration="2049000" />
+      <workItem from="1669860103677" duration="854000" />
+      <workItem from="1669920352608" duration="17563000" />
     </task>
     <servers />
   </component>
@@ -98,18 +104,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/leidenuniv/symbolicai/RunMe.java</url>
-          <line>116</line>
+          <line>126</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/leidenuniv/symbolicai/environment/Maze.java</url>
-          <line>136</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/leidenuniv/symbolicai/MyAgent.java</url>
-          <line>87</line>
-          <option name="timeStamp" value="35" />
+          <line>44</line>
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.lang.ArrayIndexOutOfBoundsException" package="java.lang" />

@@ -53,13 +53,18 @@ public class MyAgent extends Agent {
 						for(Predicate c: sent.conclusions){
 							Predicate s = substitute(c, sub);
 							if(!facts.containsKey(s.toString()) && !factList.contains(s)) {
+								if(s.add){
+									Predicate withoutPlus = new Predicate(s.toString().substring(1));
+									factList.add(withoutPlus);
+									facts.put(s.toString().substring(1), withoutPlus);
+								}
 								factList.add(s);
 								facts.put(s.toString(), s);
 							}
 						}
 					}
 				}
-				factList.removeIf(kb::contains);
+//				factList.removeIf(kb::contains);
 				factList.removeIf(cleanKB::contains);
 
 				for(Predicate f: factList){
@@ -68,6 +73,7 @@ public class MyAgent extends Agent {
 				}
 			}
 		}
+		System.out.println(cleanKB.rules());
 		return cleanKB;
 	}
 
@@ -161,30 +167,36 @@ public class MyAgent extends Agent {
 		int j = 0;
 
 		// Handling of negation
-		if(p.neg && Objects.equals(p.getName(), f.getName())){
-			for(Term pT: pTerms){
-				if(Objects.equals(pT.toString(), fTerms.get(j).toString())){
-					return null;
-				} else {
-					j++;
+		if(!(f.not || f.eql || f.add || f.del || f.act || f.adopt || f.drop)){
+			if(p.neg && Objects.equals(p.getName(), f.getName())){
+				for(Term pT: pTerms){
+					if(Objects.equals(pT.toString(), fTerms.get(j).toString())){
+						return null;
+					} else {
+						j++;
+					}
 				}
+				return results;
+			} else if(p.neg){
+				return results;
 			}
-			return results;
-		} else if(p.neg){
+		} else if(p.neg) {
 			return results;
 		}
 
 		// Normal unifies with without negation handling.
-		if(Objects.equals(p.getName(), f.getName())) {
-			for(Term pT: pTerms){
-				if(!pT.var && (!Objects.equals(pT.toString(), fTerms.get(i).toString()))){
-					return null;
-				} if(!Objects.equals(pT.toString(), fTerms.get(i).toString())) {
-					results.put(pT.toString(), fTerms.get(i).toString());
+		if(!(f.not || f.eql || f.add || f.del || f.act || f.adopt || f.drop)){
+			if(Objects.equals(p.getName(), f.getName())) {
+				for(Term pT: pTerms){
+					if(!pT.var && (!Objects.equals(pT.toString(), fTerms.get(i).toString()))){
+						return null;
+					} if(!Objects.equals(pT.toString(), fTerms.get(i).toString())) {
+						results.put(pT.toString(), fTerms.get(i).toString());
+					}
+					i++;
 				}
-				i++;
-			}
-			return results;
+				return results;
+			} else { return null; }
 		} else { return null; }
 	}
 

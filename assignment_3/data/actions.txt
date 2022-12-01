@@ -4,9 +4,6 @@
 #This is how possible postconditions are triggered. Note that you cannot form new intentions in this phase, so, world actions cannot be postconditions of actions!!!
 #Add your action postcondition rules below:
 
-goto(X,Y)>-at(X)&+at(Y)-link(X,Y)~visit(Y)
-grab(X,I)>+keyInv(I)-key(I)
-open(X,K)>-locked(K)&-keyInv(K)
-
-grab(X,I)&haveKey(I)>+keyInv(I)-key(I)~haveKey(I)
-exit>~exit
+goto(X,Y)>-currPos(X)&+currPos(Y)&-link(X,Y)&~visited(Y)
+grab(X,I)>+keyInv(I)&-keyAt(I,X)&~keyInv(I)
+open(X,K)>-keyInv(K)&~locked(K)&-lockedAt(K,X)
