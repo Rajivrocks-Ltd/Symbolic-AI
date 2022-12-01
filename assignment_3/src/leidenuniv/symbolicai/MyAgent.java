@@ -87,7 +87,7 @@ public class MyAgent extends Agent {
 
 		if(conditions.isEmpty()){
 			allSubstitutions.add(substitution);
-			System.out.println(allSubstitutions);
+//			System.out.println(allSubstitutions);
 			return !allSubstitutions.isEmpty();
 		}
 		for (Predicate fact: facts.values()) {
@@ -124,7 +124,7 @@ public class MyAgent extends Agent {
 			}
 
 			if(isNegated.size() == facts.size()){
-				System.out.println("Cool");
+//				System.out.println("Cool");
 				if (isNegated.contains(1)) {
 					return false;
 				}
