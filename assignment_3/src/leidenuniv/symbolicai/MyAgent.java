@@ -20,13 +20,7 @@ public class MyAgent extends Agent {
 		//These are then processed by processFacts() (which is already implemented for you)
 		//HINT: You should assume that forwardChain only allows *bound* predicates to be added to the facts list for now.
 
-		// key(a)>open(X)
-		// sent1
-		// sent2
-		// sent3
-
 		KB cleanKB = new KB();
-		Boolean result;
 
 		HashMap<String, Predicate> facts = new HashMap<>();
 		Vector<Predicate> factList = new Vector<>();
@@ -47,7 +41,7 @@ public class MyAgent extends Agent {
 
 				Collection<HashMap<String, String>> collection = new HashSet<>();
 				HashMap<String, String> substitutions = new HashMap<>();
-				result = findAllSubstitions(collection, substitutions, conditions, facts);
+				boolean result = findAllSubstitions(collection, substitutions, conditions, facts);
 				if(result){
 					for(HashMap<String, String> sub: collection){
 						for(Predicate c: sent.conclusions){
@@ -56,7 +50,7 @@ public class MyAgent extends Agent {
 								if(s.add){
 									Predicate withoutPlus = new Predicate(s.toString().substring(1));
 									factList.add(withoutPlus);
-									facts.put(s.toString().substring(1), withoutPlus);
+									facts.put(withoutPlus.toString(), withoutPlus);
 								}
 								factList.add(s);
 								facts.put(s.toString(), s);
@@ -64,7 +58,6 @@ public class MyAgent extends Agent {
 						}
 					}
 				}
-//				factList.removeIf(kb::contains);
 				factList.removeIf(cleanKB::contains);
 
 				for(Predicate f: factList){
@@ -73,7 +66,6 @@ public class MyAgent extends Agent {
 				}
 			}
 		}
-		System.out.println(cleanKB.rules());
 		return cleanKB;
 	}
 
@@ -93,7 +85,6 @@ public class MyAgent extends Agent {
 
 		if(conditions.isEmpty()){
 			allSubstitutions.add(substitution);
-//			System.out.println(allSubstitutions);
 			return !allSubstitutions.isEmpty();
 		}
 		for (Predicate fact: facts.values()) {
@@ -116,7 +107,6 @@ public class MyAgent extends Agent {
 					continue;
 				}
 			} else if(firstCond.neg && !visited){
-//				visited = true;
 				unify = unifiesWith(sub, fact);
 
 				if(unify == null) {
@@ -130,7 +120,6 @@ public class MyAgent extends Agent {
 			}
 
 			if(isNegated.size() == facts.size()){
-//				System.out.println("Cool");
 				if (isNegated.contains(1)) {
 					return false;
 				}
@@ -177,12 +166,10 @@ public class MyAgent extends Agent {
 					}
 				}
 				return results;
-			} else if(p.neg){
-				return results;
 			}
-		} else if(p.neg) {
-			return results;
 		}
+
+		if(p.neg) { return results; }
 
 		// Normal unifies with without negation handling.
 		if(!(f.not || f.eql || f.add || f.del || f.act || f.adopt || f.drop)){
@@ -196,8 +183,9 @@ public class MyAgent extends Agent {
 					i++;
 				}
 				return results;
-			} else { return null; }
-		} else { return null; }
+			}
+		}
+		return null;
 	}
 
 	@Override

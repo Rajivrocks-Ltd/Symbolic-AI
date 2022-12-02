@@ -10,5 +10,3 @@ at(X)&passage(Y)>+link(X,Y)&+visited(X)
 at(X)>+currPos(X)
 key(K)&at(X)>+keyAt(K,X)
 locked(K)&at(X)>+lockedAt(K,X)
-
-#exit>+exit
