@@ -1,17 +1,16 @@
 package leidenuniv.symbolicai;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
 import leidenuniv.symbolicai.logic.KB;
 import leidenuniv.symbolicai.logic.Predicate;
 import leidenuniv.symbolicai.logic.Sentence;
 import leidenuniv.symbolicai.logic.Term;
 
+
 public class MyAgent extends Agent {
-	
-	
+
+
 
 	@Override
 	public KB forwardChain(KB kb) {
@@ -20,8 +19,54 @@ public class MyAgent extends Agent {
 		//The resulting KB includes all deduced predicates, actions, additions and deletions, and goals.
 		//These are then processed by processFacts() (which is already implemented for you)
 		//HINT: You should assume that forwardChain only allows *bound* predicates to be added to the facts list for now.
-		
-		return null;
+
+		KB cleanKB = new KB();
+
+		HashMap<String, Predicate> facts = new HashMap<>();
+		Vector<Predicate> factList = new Vector<>();
+
+		for(Sentence sent: kb.rules()) {
+			for(Predicate p: sent.conclusions) {
+				if(p.bound() && !factList.contains(p) && sent.conditions.isEmpty()) {
+					factList.add(p);
+					facts.put(p.toString(),p);
+				}
+			}
+		}
+
+		// logic actual forwardChaining.
+		while(!factList.isEmpty()){
+			for(Sentence sent: kb.rules()){
+				Vector<Predicate> conditions = new Vector<>(sent.conditions);
+
+				Collection<HashMap<String, String>> collection = new HashSet<>();
+				HashMap<String, String> substitutions = new HashMap<>();
+				boolean result = findAllSubstitions(collection, substitutions, conditions, facts);
+				if(result){
+					for(HashMap<String, String> sub: collection){
+						for(Predicate c: sent.conclusions){
+							Predicate s = substitute(c, sub);
+							if(!facts.containsKey(s.toString()) && !factList.contains(s)) {
+								if(s.add){
+									Predicate withoutPlus = new Predicate(s.toString().substring(1));
+									factList.add(withoutPlus);
+									facts.put(withoutPlus.toString(), withoutPlus);
+								}
+								factList.add(s);
+								facts.put(s.toString(), s);
+							}
+						}
+					}
+				}
+				factList.removeIf(cleanKB::contains);
+
+				for(Predicate f: factList){
+					Sentence s = new Sentence(f.toString());
+					cleanKB.add(s);
+				}
+			}
+		}
+		return cleanKB;
 	}
 
 	@Override
@@ -33,28 +78,134 @@ public class MyAgent extends Agent {
 		//allSubstitutions is a list of all substitutions that are found, which was passed by reference (so you use it build the list of substitutions)
 		//substitution is the one we are currently building recursively.
 		//conditions is the list of conditions you  still need to find a subst for (this list shrinks the further you get in the recursion).
-		//facts is the list of predicates you need to match against (find substitutions so that a predicate form the conditions unifies with a fact)
+		//facts is the list of predicates you need to match against (find substitutions so that a predicate from the conditions unifies with a fact)
 
-		return false;
+		boolean visited = false;
+		Vector<Integer> isNegated = new Vector<>();
+
+		if(conditions.isEmpty()){
+			allSubstitutions.add(substitution);
+			return !allSubstitutions.isEmpty();
+		}
+		for (Predicate fact: facts.values()) {
+			HashMap<String, String> subCopy = new HashMap<>(substitution);
+			Vector<Predicate> copyConditions = new Vector<>(conditions);
+			Predicate firstCond = copyConditions.elementAt(0);
+			HashMap<String, String> unify = new HashMap<>();
+			Predicate sub = substitute(firstCond, subCopy);
+
+			if(firstCond.eql && !visited) {
+				isNegated.add(0);
+				visited = true;
+				if (!sub.eql()) {
+					continue;
+				}
+			} else if(firstCond.not && !visited) {
+				isNegated.add(0);
+				visited = true;
+				if(!sub.not()) {
+					continue;
+				}
+			} else if(firstCond.neg && !visited){
+				unify = unifiesWith(sub, fact);
+
+				if(unify == null) {
+					isNegated.add(1);
+				} else {
+					isNegated.add(0);
+				}
+			} else {
+				isNegated.add(0);
+				unify = unifiesWith(sub, fact);
+			}
+
+			if(isNegated.size() == facts.size()){
+				if (isNegated.contains(1)) {
+					return false;
+				}
+			}
+
+			if(unify != null){
+				if(!sub.neg){
+					copyConditions.remove(0);
+					subCopy.putAll(unify);
+					findAllSubstitions(allSubstitutions, subCopy, copyConditions, facts);
+				} else if(isNegated.size() == facts.size()){
+					copyConditions.remove(0);
+					subCopy.putAll(unify);
+					findAllSubstitions(allSubstitutions, subCopy, copyConditions, facts);
+				}
+			}
+		}
+		return !allSubstitutions.isEmpty() && !isNegated.contains(1);
 	}
 
 	@Override
-	public HashMap<String, String> unifiesWith(Predicate p, Predicate f) {
+	public HashMap<String, String> unifiesWith(Predicate p, Predicate f) { // Done
 		//Returns the valid substitution for which p predicate unifies with f
 		//You may assume that Predicate f is fully bound (i.e., it has no variables anymore)
 		//The result can be an empty substitution, if no subst is needed to unify p with f (e.g., if p an f contain the same constants or do not have any terms)
 		//Please note because f is bound and p potentially contains the variables, unifiesWith is NOT symmetrical
 		//So: unifiesWith("human(X)","human(joost)") returns X=joost, while unifiesWith("human(joost)","human(X)") returns null 
 		//If no subst is found it returns null
+
+		HashMap<String, String> results = new HashMap<>();
+		Vector<Term> pTerms = p.getTerms();
+		Vector<Term> fTerms = f.getTerms();
+		int i = 0;
+		int j = 0;
+
+		// Handling of negation
+		if(!(f.not || f.eql || f.add || f.del || f.act || f.adopt || f.drop)){
+			if(p.neg && Objects.equals(p.getName(), f.getName())){
+				for(Term pT: pTerms){
+					if(Objects.equals(pT.toString(), fTerms.get(j).toString())){
+						return null;
+					} else {
+						j++;
+					}
+				}
+				return results;
+			}
+		}
+
+		if(p.neg) { return results; }
+
+		// Normal unifies with without negation handling.
+		if(!(f.not || f.eql || f.add || f.del || f.act || f.adopt || f.drop)){
+			if(Objects.equals(p.getName(), f.getName())) {
+				for(Term pT: pTerms){
+					if(!pT.var && (!Objects.equals(pT.toString(), fTerms.get(i).toString()))){
+						return null;
+					} if(!Objects.equals(pT.toString(), fTerms.get(i).toString())) {
+						results.put(pT.toString(), fTerms.get(i).toString());
+					}
+					i++;
+				}
+				return results;
+			}
+		}
 		return null;
 	}
 
 	@Override
-	public Predicate substitute(Predicate old, HashMap<String, String> s) {
+	public Predicate substitute(Predicate old, HashMap<String, String> s) { // Done
 		// Substitutes all variable terms in predicate <old> for values in substitution <s>
 		//(only if a key is present in s matching the variable name of course)
 		//Use Term.substitute(s)
-		return null;
+
+		Predicate subPred = new Predicate(old.toString());
+
+		if(s == null) { return null; }
+
+		boolean hasTerms = subPred.hasTerms();
+		if(hasTerms){
+			for(Term term:subPred.getTerms()){
+				term.substitute(s);
+			}
+		}
+
+		return subPred;
 	}
 
 	@Override

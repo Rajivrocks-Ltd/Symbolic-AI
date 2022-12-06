@@ -7,3 +7,12 @@
 #They are processed by the agent as new facts into the appropriate knowledge bases (beliefs, desires, intentions).
 #The exception is the addition action, of which the predicate is added to the facts during inference.
 #Add your program rules below:
+
+currPos(X)&link(X,Y)>_goto(X,Y)
+keyAt(I,X)&currPos(X)&!keyInv(I)>_grab(X,I)
+currPos(X)&lockedAt(K,X)&keyInv(K)>_open(X,K)
+
+# Goals
+currPos(X)&lockedAt(K,X)&!keyInv(K)>*keyInv(K)
+keyInv(K)>*locked(K)
+currPos(X)&link(X,Y)&!visited(Y)>*visited(Y)
