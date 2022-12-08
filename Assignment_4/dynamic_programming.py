@@ -15,7 +15,9 @@ class Dynamic_Programming:
     def __init__(self):
         self.V_s = None # will store a potential value solution table
         self.Q_sa = None # will store a potential action-value solution table
-        
+
+
+
     def value_iteration(self,env,gamma = 1.0, theta=0.001):
         ''' Executes value iteration on env. 
         gamma is the discount factor of the MDP
@@ -24,27 +26,63 @@ class Dynamic_Programming:
         print("Starting Value Iteration (VI)")
         # initialize value table
         V_s = np.zeros(env.n_states)
-    
-        ## IMPLEMENT YOUR VALUE ITERATION ALGORITHM HERE
-        print("You still need to implement value iteration!")
-    
+
+        # initialize temporary value table
+        V_s_temp = np.zeros(env.n_states)
+
+        # initialize a flag for convergence
+        is_converged = False
+
+        # repeat until convergence
+        while not is_converged:
+            # iterate over all states
+            for s in range(env.n_states):
+                # initialize the maximum value as negative infinity
+                max_value = -float("inf")
+                state = env.states[s]
+
+                # iterate over all actions
+                for a in range(env.n_actions):
+                    # calculate the expected value of the current state-action pair
+                    action = env.actions[a]
+                    expected_value = 0
+
+                    next_state, reward = env.transition_function(state,action)
+                    expected_value += reward + gamma * V_s[next_state]
+                    # print(f'expected value: {expected_value}, reward: {reward}, V_s[{next_state}]:{V_s[next_state]}')
+                    # print(next_state)
+
+                    # update the maximum value if the expected value is higher
+                    max_value = max(max_value, expected_value)
+
+                # update the temporary value table
+                V_s_temp[s] = max_value
+
+            # check for convergence
+            is_converged = np.allclose(V_s, V_s_temp, atol=theta)
+
+            # update the value table with the temporary values
+            V_s = V_s_temp
+
         self.V_s = V_s
+        # print(self.V_s)
         return
 
-    def Q_value_iteration(self,env,gamma = 1.0, theta=0.001):
-        ''' Executes Q-value iteration on env. 
+    def Q_value_iteration(self, env, gamma=1.0, theta=0.001):
+        ''' Executes Q-value iteration on env.
         gamma is the discount factor of the MDP
         theta is the acceptance threshold for convergence '''
 
         print("Starting Q-value Iteration (QI)")
         # initialize state-action value table
-        Q_sa = np.zeros([env.n_states,env.n_actions])
+        Q_sa = np.zeros([env.n_states, env.n_actions])
 
         ## IMPLEMENT YOUR Q-VALUE ITERATION ALGORITHM HERE
         print("You still need to implement Q-value iteration!")
 
         self.Q_sa = Q_sa
         return
+
                 
     def execute_policy(self,env,table='V'):
         ## Execute the greedy action, starting from the initial state
@@ -57,11 +95,15 @@ class Dynamic_Programming:
             # Compute action values
             if table == 'V' and self.V_s is not None:
                 ## IMPLEMENT ACTION VALUE ESTIMATION FROM self.V_s HERE !!!
-                print("You still need to implement greedy action selection from the value table self.V_s!")
-                greedy_action = None # replace this!
+                # print("You still need to implement greedy action selection from the value table self.V_s!")
+                action_values = {}
+                for action in available_actions:
+                    action_values[action] = self.V_s[current_state]
+                greedy_action = max(action_values, key=action_values.get)
 
-                
-            
+
+
+
             elif table == 'Q' and self.Q_sa is not None:
                 ## IMPLEMENT ACTION VALUE ESTIMATION FROM self.Q_sa here !!!
                 
