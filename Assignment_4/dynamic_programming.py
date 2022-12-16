@@ -18,41 +18,26 @@ class Dynamic_Programming:
 
     def value_iteration(self, env, gamma=1.0, theta=0.001):
         print("Starting Value Iteration (VI)")
-        # initialize value table
         V_s = np.zeros(env.n_states)
-        # initialize the delta variable to track convergence
         delta = theta + 1
-        # initialize counter for number of iterations
         num_iter = 0
-        # keep updating value table until convergence
         while delta > theta:
-
-            # store the previous value table
+            delta = 0.0
             V_s_prev = V_s.copy()
-            # loop through all states in the environment
             for s in env.states:
-                # initialize the value of the current state to negative infinity
+                x = V_s[s]
                 max_value = -float("inf")
-                # loop through all actions in the environment
                 for a in env.actions:
-                    # calculate the expected value of the current state-action pair
-                    exp_value = 0
-                    # get the next state and reward for the current state and action
-                    # without updating the internal state of the environment
                     next_s, reward = env.transition_function(s, a)
-                    # add the probability of transitioning to the next state
-                    # multiplied by the value of the next state and the reward
-                    exp_value += (reward + gamma * V_s_prev[next_s])
-                    # update the value of the current state if the expected value is higher
+                    exp_value = (reward + gamma * V_s[next_s])
                     max_value = max(max_value, exp_value)
-                # update the value table with the maximum value of the current state
                 V_s[s] = max_value
-            # calculate the difference between the previous and current value tables
-            delta = np.max(np.abs(V_s - V_s_prev))
+                delta = max(delta, abs(V_s[s] - x))
             # print the error in each iteration
-            # print("Iteration: {}, Error: {}".format(num_iter, delta))
-            # print(V_s)
-            # print('Error:', delta)
+            print("Iteration: {}, Error: {}".format(num_iter, delta))
+            print(V_s)
+            print("------------------------------------")
+            print(V_s_prev)
             # increment the iteration counter
             num_iter += 1
         self.V_s = V_s
@@ -73,37 +58,25 @@ class Dynamic_Programming:
         num_iter = 1
         # keep updating value table until convergence
         while delta > theta:
-
-            # store the previous value table
+            delta = 0.0
             Q_sa_prev = Q_sa.copy()
-            # loop through all states in the environment
             for s in env.states:
-                # initialize the value of the current state to negative infinity
                 max_value = -float("inf")
-                # loop through all actions in the environment
-                for a in range(4):
-                    # calculate the expected value of the current state-action pair
-                    exp_value = 0
-                    # get the next state and reward for the current state and action
-                    # without updating the internal state of the environment
+                for a in range(len(env.actions)):
+                    x = Q_sa[s][a]
                     action = env.actions[a]
                     next_s, reward = env.transition_function(s, action)
-                    # add the probability of transitioning to the next state
-                    # multiplied by the value of the next state and the reward
-                    exp_value += (reward + gamma * Q_sa_prev[next_s][a])
-                    # print(f'Expected value: {exp_value}')
-                    # update the value of the current state if the expected value is higher
+                    exp_value = (reward + gamma * max(Q_sa[next_s]))
                     max_value = max(max_value, exp_value)
-                # update the value table with the maximum value of the current state
-                Q_sa[s][a] = max_value
-            # calculate the difference between the previous and current value tables
-            delta = np.max(np.abs(Q_sa - Q_sa_prev))
+                    Q_sa[s][a] = max_value
+                    delta = max(delta, abs(Q_sa[s][a] - x))
             # print the error in each iteration
             print("Iteration: {}, Error: {}".format(num_iter, delta))
-            print(Q_sa)
+            # print(Q_sa)
+            print("------------------------------------")
+            # print(Q_sa_prev)
             # increment the iteration counter
             num_iter += 1
-        # print(Q_sa)
         self.Q_sa = Q_sa
         return
 
@@ -121,7 +94,13 @@ class Dynamic_Programming:
             if table == 'V' and self.V_s is not None:
                 ## IMPLEMENT ACTION VALUE ESTIMATION FROM self.V_s HERE !!!
                 # print("You still need to implement greedy action selection from the value table self.V_s!")
-                greedy_action = None
+                action_dict = {}
+                for a in available_actions:
+                    s_prime, reward = env.transition_function(current_state, a)
+                    action_dict[a] = reward + (self.V_s[current_state])
+
+                greedy_action =
+
 
 
 
@@ -173,14 +152,14 @@ if __name__ == '__main__':
     DP = Dynamic_Programming()
 
     # Run value iteration
-    # input('Press enter to run value iteration')
-    # optimal_V_s = DP.value_iteration(env)
-    # input('Press enter to start execution of optimal policy according to V')
-    # DP.execute_policy(env, table='V') # execute the optimal policy
+    input('Press enter to run value iteration')
+    optimal_V_s = DP.value_iteration(env)
+    input('Press enter to start execution of optimal policy according to V')
+    DP.execute_policy(env, table='V') # execute the optimal policy
     
     # Once again with Q-values:
-    input('Press enter to run Q-value iteration')
-    optimal_Q_sa = DP.Q_value_iteration(env)
-    input('Press enter to start execution of optimal policy according to Q')
-    DP.execute_policy(env, table='Q') # execute the optimal policy
+    # input('Press enter to run Q-value iteration')
+    # optimal_Q_sa = DP.Q_value_iteration(env)
+    # input('Press enter to start execution of optimal policy according to Q')
+    # DP.execute_policy(env, table='Q') # execute the optimal policy
 
