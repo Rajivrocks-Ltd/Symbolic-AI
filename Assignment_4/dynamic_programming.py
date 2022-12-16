@@ -97,9 +97,11 @@ class Dynamic_Programming:
                 action_dict = {}
                 for a in available_actions:
                     s_prime, reward = env.transition_function(current_state, a)
-                    action_dict[a] = reward + (self.V_s[current_state])
+                    action_dict[a] = reward + (self.V_s[s_prime])
 
-                greedy_action =
+                max_key, max_value = np.argmax(action_dict, key=lambda x: x[1])
+
+                greedy_action = max_key
 
 
 
@@ -108,9 +110,10 @@ class Dynamic_Programming:
             elif table == 'Q' and self.Q_sa is not None:
                 ## IMPLEMENT ACTION VALUE ESTIMATION FROM self.Q_sa here !!!
                 
-                print("You still need to implement greedy action selection from the state-action value table self.Q_sa!")
-                greedy_action = None # replace this!
-                
+                # print("You still need to implement greedy action selection from the state-action value table self.Q_sa!")
+                # greedy_action = None # replace this!
+                action_values = self.Q_sa[current_state]
+                greedy_action = env.actions[np.argmax(action_values)]
                 
             else:
                 print("No optimal value table was detected. Only manual execution possible.")
@@ -152,14 +155,14 @@ if __name__ == '__main__':
     DP = Dynamic_Programming()
 
     # Run value iteration
-    input('Press enter to run value iteration')
-    optimal_V_s = DP.value_iteration(env)
-    input('Press enter to start execution of optimal policy according to V')
-    DP.execute_policy(env, table='V') # execute the optimal policy
+    # input('Press enter to run value iteration')
+    # optimal_V_s = DP.value_iteration(env)
+    # input('Press enter to start execution of optimal policy according to V')
+    # DP.execute_policy(env, table='V') # execute the optimal policy
     
     # Once again with Q-values:
-    # input('Press enter to run Q-value iteration')
-    # optimal_Q_sa = DP.Q_value_iteration(env)
-    # input('Press enter to start execution of optimal policy according to Q')
-    # DP.execute_policy(env, table='Q') # execute the optimal policy
+    input('Press enter to run Q-value iteration')
+    optimal_Q_sa = DP.Q_value_iteration(env)
+    input('Press enter to start execution of optimal policy according to Q')
+    DP.execute_policy(env, table='Q') # execute the optimal policy
 
