@@ -9,6 +9,7 @@ By Thomas Moerland
 
 import numpy as np
 from world import World
+from time import perf_counter
 
 class Dynamic_Programming:
 
@@ -35,9 +36,9 @@ class Dynamic_Programming:
                 delta = max(delta, abs(V_s[s] - x))
             # print the error in each iteration
             print("Iteration: {}, Error: {}".format(num_iter, delta))
-            print(V_s)
-            print("------------------------------------")
-            print(V_s_prev)
+            # print(V_s)
+            # print("------------------------------------")
+            # print(V_s_prev)
             # increment the iteration counter
             num_iter += 1
         self.V_s = V_s
@@ -99,7 +100,8 @@ class Dynamic_Programming:
                     s_prime, reward = env.transition_function(current_state, a)
                     action_dict[a] = reward + (self.V_s[s_prime])
 
-                max_key, max_value = np.argmax(action_dict, key=lambda x: x[1])
+                max_key = max(action_dict, key=action_dict.get)
+                print(max_key)
 
                 greedy_action = max_key
 
@@ -155,14 +157,14 @@ if __name__ == '__main__':
     DP = Dynamic_Programming()
 
     # Run value iteration
-    # input('Press enter to run value iteration')
-    # optimal_V_s = DP.value_iteration(env)
-    # input('Press enter to start execution of optimal policy according to V')
-    # DP.execute_policy(env, table='V') # execute the optimal policy
+    input('Press enter to run value iteration')
+    optimal_V_s = DP.value_iteration(env)
+    input('Press enter to start execution of optimal policy according to V')
+    DP.execute_policy(env, table='V') # execute the optimal policy
     
     # Once again with Q-values:
-    input('Press enter to run Q-value iteration')
-    optimal_Q_sa = DP.Q_value_iteration(env)
-    input('Press enter to start execution of optimal policy according to Q')
-    DP.execute_policy(env, table='Q') # execute the optimal policy
+    # input('Press enter to run Q-value iteration')
+    # optimal_Q_sa = DP.Q_value_iteration(env)
+    # input('Press enter to start execution of optimal policy according to Q')
+    # DP.execute_policy(env, table='Q') # execute the optimal policy
 
