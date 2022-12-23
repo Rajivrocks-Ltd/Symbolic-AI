@@ -9,7 +9,6 @@ By Thomas Moerland
 
 import numpy as np
 from world import World
-from time import perf_counter
 
 class Dynamic_Programming:
 
@@ -21,10 +20,9 @@ class Dynamic_Programming:
         print("Starting Value Iteration (VI)")
         V_s = np.zeros(env.n_states)
         delta = theta + 1
-        num_iter = 0
+
         while delta > theta:
             delta = 0.0
-            V_s_prev = V_s.copy()
             for s in env.states:
                 x = V_s[s]
                 max_value = -float("inf")
@@ -34,13 +32,7 @@ class Dynamic_Programming:
                     max_value = max(max_value, exp_value)
                 V_s[s] = max_value
                 delta = max(delta, abs(V_s[s] - x))
-            # print the error in each iteration
-            print("Iteration: {}, Error: {}".format(num_iter, delta))
-            # print(V_s)
-            # print("------------------------------------")
-            # print(V_s_prev)
-            # increment the iteration counter
-            num_iter += 1
+
         self.V_s = V_s
         return
 
@@ -56,11 +48,9 @@ class Dynamic_Programming:
         # initialize the delta variable to track convergence
         delta = theta + 1
         # initialize counter for number of iterations
-        num_iter = 1
         # keep updating value table until convergence
         while delta > theta:
             delta = 0.0
-            Q_sa_prev = Q_sa.copy()
             for s in env.states:
                 max_value = -float("inf")
                 for a in range(len(env.actions)):
@@ -71,13 +61,6 @@ class Dynamic_Programming:
                     max_value = max(max_value, exp_value)
                     Q_sa[s][a] = max_value
                     delta = max(delta, abs(Q_sa[s][a] - x))
-            # print the error in each iteration
-            print("Iteration: {}, Error: {}".format(num_iter, delta))
-            # print(Q_sa)
-            print("------------------------------------")
-            # print(Q_sa_prev)
-            # increment the iteration counter
-            num_iter += 1
         self.Q_sa = Q_sa
         return
 
@@ -100,10 +83,7 @@ class Dynamic_Programming:
                     s_prime, reward = env.transition_function(current_state, a)
                     action_dict[a] = reward + (self.V_s[s_prime])
 
-                max_key = max(action_dict, key=action_dict.get)
-                print(max_key)
-
-                greedy_action = max_key
+                greedy_action = max(action_dict, key=action_dict.get)
 
 
 
